@@ -1,0 +1,174 @@
+.protein-page {
+  background: #fff;
+  color: #000;
+}
+
+.protein-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  padding: 80px 5vw 60px;
+  align-items: center;
+}
+
+.protein-hero-content h1 {
+  font-size: 2.2rem;
+  margin: 0 0 16px;
+  line-height: 1.4;
+}
+
+.protein-hero-content h6 {
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+}
+
+.protein-hero-image img {
+  width: 100%;
+  max-width: 540px;
+}
+
+.protein-logos {
+  background: #000;
+  padding: 30px 0;
+}
+
+.protein-intro {
+  text-align: center;
+  padding: 60px 8vw 40px;
+  background: #f5f5f5;
+}
+
+.protein-intro h2 {
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+}
+
+.protein-intro p {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: #555;
+}
+
+.protein-products {
+  padding: 50px 6vw 70px;
+}
+
+.protein-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 28px;
+}
+
+.protein-card {
+  background: #fff;
+  text-decoration: none;
+  color: inherit;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.protein-card-images {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.protein-card-images img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.protein-card h3 {
+  font-size: 1rem;
+  margin: 0 0 10px;
+}
+
+.protein-price {
+  font-size: 1.4rem;
+  margin: 0 0 12px;
+  font-weight: 700;
+}
+
+.protein-description {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #444;
+  margin: 0;
+}
+
+.protein-subscribe {
+  background: #f0f0f0;
+  padding: 70px 6vw;
+  text-align: center;
+}
+
+.protein-subscribe h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.protein-subscribe-copy {
+  max-width: 900px;
+  margin: 0 auto 30px;
+  line-height: 1.8;
+  font-size: 1rem;
+}
+
+.protein-subscribe h6 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.protein-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.protein-contact-card h6 {
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+}
+
+.protein-contact-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.protein-contact-button svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+@media (max-width: 1024px) {
+  .protein-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .protein-hero {
+    padding: 60px 6vw 40px;
+  }
+
+  .protein-subscribe {
+    padding: 60px 6vw;
+  }
+}

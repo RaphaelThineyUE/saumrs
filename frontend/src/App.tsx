@@ -4,7 +4,7 @@ import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
 import { Contact } from './pages/Contact';
 import { Order } from './pages/Order';
-import { FivePillars, Ingredients, Subscriptions, NotFound } from './pages/index';
+import { FivePillars, Ingredients, Protein, Subscriptions, NotFound } from './pages/index';
 import './styles/global.css';
 
 function App() {
@@ -18,6 +18,7 @@ function App() {
           <Route path="/order" element={<Order />} />
           <Route path="/five-pillars" element={<FivePillars />} />
           <Route path="/ingredients" element={<Ingredients />} />
+          <Route path="/protein" element={<Protein />} />
           <Route path="/subscriptions" element={<Subscriptions />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

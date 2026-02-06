@@ -112,6 +112,38 @@ const run = async () => {
     await pageNew.waitForTimeout(1500);
     await pageOld.waitForTimeout(1500);
 
+    // Scroll through the entire page to trigger all animations
+    const scrollAndWait = async (page) => {
+      const { scrollHeight, viewportHeight } = await page.evaluate(() => {
+        const doc = document.documentElement;
+        const body = document.body;
+        const scrollHeight = Math.max(
+          body ? body.scrollHeight : 0,
+          doc ? doc.scrollHeight : 0,
+        );
+        const viewportHeight = doc ? doc.clientHeight : window.innerHeight;
+        return { scrollHeight, viewportHeight };
+      });
+      const scrollSteps = Math.ceil(scrollHeight / viewportHeight);
+
+      for (let i = 0; i < scrollSteps; i++) {
+        await page.evaluate(
+          ({ step, vh }) => {
+            window.scrollTo(0, step * vh);
+          },
+          { step: i, vh: viewportHeight },
+        );
+        await page.waitForTimeout(300);
+      }
+
+      // Scroll back to top
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.waitForTimeout(1000);
+    };
+
+    await scrollAndWait(pageNew);
+    await scrollAndWait(pageOld);
+
     const newShot = screenshotPath(pageInfo.name, "new");
     const oldShot = screenshotPath(pageInfo.name, "old");
 

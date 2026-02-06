@@ -29,6 +29,7 @@ export const Header = () => {
             🛒
             <span className="cart-count">0</span>
           </Link>
+          <div className="search-icon" aria-hidden="true"></div>
         </div>
       </header>
 
@@ -46,6 +47,9 @@ export const Header = () => {
         </Link>
         <Link to="/ingredients" onClick={handleLinkClick}>
           INGREDIENTS
+        </Link>
+        <Link to="/protein" onClick={handleLinkClick}>
+          PROTEIN
         </Link>
         <Link to="/subscriptions" onClick={handleLinkClick}>
           SUBSCRIPTIONS

@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import Marquee from 'react-fast-marquee';
 import { useScrollAnimation, useParallax } from '../hooks/useAnimations';
 import './Home.css';
 
@@ -45,21 +47,28 @@ export const Home = () => {
           </p>
         </div>
         <div className="hero-image">
-          <div className="product-placeholder parallax-element">PRODUCT IMAGE</div>
+          <img src="/images/Header-1.png" alt="SAUMRS Product" className="product-placeholder parallax-element" />
         </div>
       </section>
 
       <section className="press-section">
-        <div className="press-logo">Bloomberg</div>
-        <div className="press-logo">Yahoo! News</div>
-        <div className="press-logo">Exeleon</div>
-        <div className="press-logo">Medium</div>
-        <div className="press-logo">Fast Company</div>
+        <Marquee speed={40} gradient={false} pauseOnHover={true}>
+          <img src="/images/bloomberg-radio-logo-300x200-white-q6yrxgjsmah44e9zqfmcd2ql8qnamuxu1lotcgbp1m.png" alt="Bloomberg" className="press-logo-img" />
+          <img src="/images/yahoo-news-logo-300x200-white-q6yrxifgzyjorm79fgfli29ifie1295apuzsb08wp6.png" alt="Yahoo! News" className="press-logo-img" />
+          <img src="/images/exceleon-magazine-logo-300x200-white-q6yrxhhmt4ieg08mky0yxki1u4inuk1kdqcatqaave.png" alt="Exeleon" className="press-logo-img" />
+          <img src="/images/medium-logo-300x200-white-q6yrxhhmt4ieg08mky0yxki1u4inuk1kdqcatqaave.png" alt="Medium" className="press-logo-img" />
+          <img src="/images/fast-company-new-logos-300x200-white-q6yrxhhmt4ieg08mky0yxki1u4inuk1kdqcatqaave.png" alt="Fast Company" className="press-logo-img" />
+          <img src="/images/entrepreneur-magazine-logo-300x200-white-q6yrxgjsmah44e9zqfmcd2ql8qnamuxu1lotcgbp1m.png" alt="Entrepreneur" className="press-logo-img" />
+          <img src="/images/bloomberg-radio-logo-300x200-white-q6yrxgjsmah44e9zqfmcd2ql8qnamuxu1lotcgbp1m.png" alt="Bloomberg" className="press-logo-img" />
+          <img src="/images/yahoo-news-logo-300x200-white-q6yrxifgzyjorm79fgfli29ifie1295apuzsb08wp6.png" alt="Yahoo! News" className="press-logo-img" />
+          <img src="/images/exceleon-magazine-logo-300x200-white-q6yrxhhmt4ieg08mky0yxki1u4inuk1kdqcatqaave.png" alt="Exeleon" className="press-logo-img" />
+          <img src="/images/medium-logo-300x200-white-q6yrxhhmt4ieg08mky0yxki1u4inuk1kdqcatqaave.png" alt="Medium" className="press-logo-img" />
+        </Marquee>
       </section>
 
       <section className="superfoods">
         <div className="athlete-image scroll-animate parallax-element">
-          <div className="athlete-placeholder">ATHLETE IMAGE</div>
+          <img src="/images/athlete-image.png" alt="Athlete" className="athlete-placeholder" />
         </div>
         <div className="superfoods-content scroll-animate">
           <h2>Superfoods make Superhumans</h2>
@@ -154,7 +163,7 @@ export const Home = () => {
         <div className="nutrition-middle">
           <div className="nutrition-circle"></div>
           <div className="center-product-wrapper scroll-animate parallax-element">
-            <div className="product-placeholder">S.A.U.M.R.S</div>
+            <img src="/images/Product-Highlight.png" alt="SAUMRS" className="center-product-image" />
           </div>
           <div className="nutrition-item-positioned left-top scroll-animate">
             <div className="nutrition-icon">⏳</div>
@@ -224,9 +233,7 @@ export const Home = () => {
 
       <section className="pricing-section">
         <div>
-          <div className="product-placeholder parallax-element" style={{ maxWidth: '400px' }}>
-            PRODUCT PACKAGES
-          </div>
+          <img src="/images/Bundle-and-Save-Scene.png" alt="Product Packages" className="product-placeholder parallax-element" style={{ maxWidth: '400px' }} />
         </div>
         <div className="pricing-content">
           <h2>Join the SAUMRS Family for as Little as $5.55 per Day!</h2>
@@ -237,9 +244,9 @@ export const Home = () => {
             Unlock incredible savings with our bi-annual and annual supply bundles. Subscribe today
             and enjoy amazing pricing.
           </p>
-          <a href="/subscriptions" className="btn-primary">
+          <Link to="/subscriptions" className="btn-primary">
             🔒 SUBSCRIBE
-          </a>
+          </Link>
         </div>
       </section>
 

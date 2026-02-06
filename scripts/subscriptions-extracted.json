@@ -1,0 +1,53 @@
+[
+  {
+    "title": "3-Month",
+    "subtitle": "Subscription",
+    "originalPrice": "",
+    "price": "$600-900",
+    "period": "Billed Every 3 Months",
+    "features": [
+      "One (1) Bag of Protein",
+      "Three (3) Bag of SAUMRS",
+      "Item Total = 4 Bags of Product",
+      "Scheduled = Every Three (3) MO",
+      "Deliveries = One (1)",
+      "Total = 1 Bag of Protein",
+      "Total = 3 Bags of SAUMRS"
+    ],
+    "ribbon": ""
+  },
+  {
+    "title": "Bi-Annually",
+    "subtitle": "Subscription",
+    "originalPrice": "",
+    "price": "$1,100-1,650",
+    "period": "Billed Every 6 Months",
+    "features": [
+      "One (1) Bag of Protein",
+      "Three (3) Bag of SAUMRS",
+      "Item Total = 4 Bags of Product",
+      "Scheduled = Every Three (3) MO",
+      "Deliveries = Two (2)",
+      "Total = 2 Bags of Protein",
+      "Total = 6 Bags of SAUMRS"
+    ],
+    "ribbon": ""
+  },
+  {
+    "title": "Yearly",
+    "subtitle": "Subscription",
+    "originalPrice": "",
+    "price": "$2,000-3,000",
+    "period": "Billed Every Year",
+    "features": [
+      "One (1) Bag of Protein",
+      "Three (3) Bag of SAUMRS",
+      "Item Total = 4 Bags of Product",
+      "Scheduled = Every Three (3) MO",
+      "Deliveries = Four (4)",
+      "Total = 4 Bags of Protein",
+      "Total = 12 Bags of SAUMRS"
+    ],
+    "ribbon": ""
+  }
+]

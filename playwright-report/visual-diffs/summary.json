@@ -6,57 +6,57 @@
   "results": [
     {
       "name": "home",
-      "newUrl": "http://localhost:5173/",
+      "newUrl": "http://localhost:5174/",
       "oldUrl": "http://localhost:4175/saumrsmainpagev3.html",
-      "diffPixels": 1007411,
+      "diffPixels": 5291500,
       "diffPath": "/workspaces/saumrs/playwright-report/visual-diffs/home.diff.png",
       "width": 1920,
-      "height": 6873
+      "height": 6958
     },
     {
       "name": "contact",
-      "newUrl": "http://localhost:5173/contact",
+      "newUrl": "http://localhost:5174/contact",
       "oldUrl": "http://localhost:4175/contact-updated.html",
-      "diffPixels": 3290895,
+      "diffPixels": 3055572,
       "diffPath": "/workspaces/saumrs/playwright-report/visual-diffs/contact.diff.png",
       "width": 1920,
       "height": 2306
     },
     {
       "name": "order",
-      "newUrl": "http://localhost:5173/order",
+      "newUrl": "http://localhost:5174/order",
       "oldUrl": "http://localhost:4175/order-page.html",
-      "diffPixels": 1352535,
+      "diffPixels": 1367575,
       "diffPath": "/workspaces/saumrs/playwright-report/visual-diffs/order.diff.png",
       "width": 1920,
       "height": 2534
     },
     {
       "name": "five-pillars",
-      "newUrl": "http://localhost:5173/five-pillars",
+      "newUrl": "http://localhost:5174/five-pillars",
       "oldUrl": "http://localhost:4175/five-pillars-page.html",
-      "diffPixels": 7425146,
+      "diffPixels": 10503602,
       "diffPath": "/workspaces/saumrs/playwright-report/visual-diffs/five-pillars.diff.png",
       "width": 1920,
-      "height": 4606
+      "height": 7673
     },
     {
       "name": "ingredients",
-      "newUrl": "http://localhost:5173/ingredients",
+      "newUrl": "http://localhost:5174/ingredients",
       "oldUrl": "http://localhost:4175/ingredients-page.html",
-      "diffPixels": 7863773,
+      "diffPixels": 8500117,
       "diffPath": "/workspaces/saumrs/playwright-report/visual-diffs/ingredients.diff.png",
       "width": 1920,
-      "height": 5107
+      "height": 8449
     },
     {
       "name": "subscriptions",
-      "newUrl": "http://localhost:5173/subscriptions",
+      "newUrl": "http://localhost:5174/subscriptions",
       "oldUrl": "http://localhost:4175/subscriptions-styled.html",
-      "diffPixels": 3463921,
+      "diffPixels": 5230290,
       "diffPath": "/workspaces/saumrs/playwright-report/visual-diffs/subscriptions.diff.png",
       "width": 1920,
-      "height": 3531
+      "height": 4213
     }
   ]
 }

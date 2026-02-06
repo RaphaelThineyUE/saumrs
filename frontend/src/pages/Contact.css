@@ -46,28 +46,10 @@
   transform: translateX(0);
 }
 
-.info-item {
-  margin-bottom: 2rem;
-}
-
-.info-item h3 {
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
+.contact-info h6 {
+  font-size: 0.95rem;
   font-weight: 600;
-}
-
-.info-item p {
-  font-size: 0.85rem;
-}
-
-.info-item a {
-  color: #000;
-  text-decoration: none;
-  transition: opacity 0.3s;
-}
-
-.info-item a:hover {
-  opacity: 0.6;
+  margin-bottom: 1.2rem;
 }
 
 .contact-form {
@@ -165,16 +147,11 @@
   transform: translateX(0);
 }
 
-.location-info h3 {
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-}
-
-.location-info p {
-  font-size: 0.85rem;
-  margin-bottom: 0.3rem;
+.location-info h6 {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
   line-height: 1.6;
+  font-weight: 600;
 }
 
 .social-icons {
@@ -186,9 +163,17 @@
 
 .social-icons a {
   color: #000;
-  font-size: 1.2rem;
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
   text-decoration: none;
   transition: opacity 0.3s;
+}
+
+.social-icons svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
 }
 
 .social-icons a:hover {
@@ -209,7 +194,7 @@
 
 .welcome-text {
   font-size: 0.95rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .subscribe-section p {
@@ -225,50 +210,63 @@
   margin-bottom: 1rem;
 }
 
-.subscribe-info {
-  display: flex;
-  justify-content: center;
-  gap: 4rem;
-  margin: 2rem 0;
-}
-
-.info-block {
-  text-align: center;
-}
-
-.info-block h3 {
-  font-size: 0.85rem;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-}
-
-.info-block p {
-  font-size: 0.9rem;
-}
-
-.subscribe-buttons {
-  display: flex;
-  justify-content: center;
+.subscribe-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 2rem;
-  margin-top: 2rem;
-  flex-wrap: wrap;
+  max-width: 720px;
+  margin: 2rem auto 0;
 }
 
-.btn-subscribe {
-  display: inline-block;
-  padding: 1rem 2.5rem;
+.subscribe-contact-card h6 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.subscribe-contact-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0.85rem 2rem;
   background: #000;
   color: #fff;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   letter-spacing: 1px;
   transition: all 0.3s;
 }
 
-.btn-subscribe:hover {
+.subscribe-contact-button svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.subscribe-contact-button:hover {
   background: #333;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.map-section {
+  padding: 0 5rem 4rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+
+.map-section.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.map-section iframe {
+  width: 100%;
+  height: 380px;
+  border: 0;
+  display: block;
 }
 
 @media (max-width: 1024px) {
@@ -302,11 +300,7 @@
     padding: 2rem;
   }
 
-  .subscribe-info {
-    gap: 2rem;
-  }
-
-  .subscribe-buttons {
-    gap: 1rem;
+  .map-section {
+    padding: 0 2rem 2rem;
   }
 }

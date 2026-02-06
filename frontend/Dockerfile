@@ -8,6 +8,7 @@ RUN npm install
 
 COPY vite.config.ts tsconfig.json tsconfig.node.json index.html ./
 COPY src ./src
+COPY public ./public
 COPY .eslintrc.cjs ./
 
 EXPOSE 5173

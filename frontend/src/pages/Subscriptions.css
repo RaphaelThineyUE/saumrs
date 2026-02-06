@@ -1,0 +1,322 @@
+.subscriptions-page {
+  background: #fff;
+  color: #000;
+}
+
+.subscriptions-title {
+  background: #f8f8f8;
+  padding: 90px 6vw 60px;
+  text-align: center;
+}
+
+.subscriptions-title h2 {
+  font-size: 2.4rem;
+  font-weight: 400;
+  letter-spacing: 3px;
+}
+
+.subscriptions-logos {
+  background: #000;
+  padding: 30px 0;
+}
+
+.intro-section,
+.team-section,
+.bespoke-section,
+.pricing-section,
+.pricing-intro,
+.final-cta {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.intro-section.animate,
+.team-section.animate,
+.bespoke-section.animate,
+.pricing-section.animate,
+.pricing-intro.animate,
+.final-cta.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.intro-section {
+  padding: 50px 6vw;
+  text-align: center;
+}
+
+.intro-section h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: 400;
+}
+
+.intro-section p {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  max-width: 900px;
+  margin: 0 auto;
+  color: #333;
+}
+
+.team-section {
+  padding: 40px 6vw;
+  text-align: center;
+  background: #f0f0f0;
+}
+
+.team-image img {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.bespoke-section {
+  background: #c8c8c8;
+  padding: 60px 6vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.bespoke-content h2 {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  font-weight: 400;
+}
+
+.bespoke-content p {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #333;
+}
+
+.bespoke-image img {
+  width: 100%;
+  max-width: 520px;
+}
+
+.pricing-section {
+  background: #1a1a1a;
+  padding: 60px 6vw;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 1100px;
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+
+.pricing-card {
+  text-align: center;
+  position: relative;
+  border-right: 1px solid #ddd;
+  background: #fff;
+}
+
+.pricing-card:last-child {
+  border-right: none;
+}
+
+.pricing-badge {
+  position: absolute;
+  top: -15px;
+  right: 20px;
+  background: #000;
+  color: #fff;
+  padding: 0.4rem 1rem;
+  font-size: 0.75rem;
+  transform: rotate(-5deg);
+  letter-spacing: 1px;
+}
+
+.pricing-header {
+  background: #000;
+  color: #fff;
+  padding: 2rem 1.5rem;
+}
+
+.pricing-header h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.3rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.pricing-header .subtitle {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.pricing-price {
+  padding: 2rem 1.5rem;
+  background: #f8f8f8;
+}
+
+.price-old {
+  text-decoration: line-through;
+  opacity: 0.6;
+  margin-bottom: 0.5rem;
+}
+
+.price-amount {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.price-details {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.pricing-features {
+  padding: 2rem 1.5rem;
+  text-align: left;
+  min-height: 280px;
+}
+
+.feature-item {
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+
+.pricing-button {
+  padding: 0 1.5rem 2rem;
+}
+
+.btn-order {
+  display: block;
+  width: 100%;
+  padding: 0.9rem;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+.pricing-intro {
+  background: #fff;
+  padding: 50px 6vw;
+  text-align: center;
+}
+
+.pricing-intro h2 {
+  font-size: 1.8rem;
+  font-weight: 400;
+}
+
+.final-cta {
+  background: #f8f8f8;
+  padding: 60px 6vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.final-cta-image img {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.final-cta-content h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.final-cta-content p {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #333;
+}
+
+.subscriptions-subscribe {
+  background: #f0f0f0;
+  padding: 70px 6vw;
+  text-align: center;
+}
+
+.subscriptions-subscribe h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.subscriptions-subscribe-copy {
+  max-width: 900px;
+  margin: 0 auto 30px;
+  line-height: 1.8;
+  font-size: 1rem;
+}
+
+.subscriptions-subscribe h6 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.subscriptions-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.subscriptions-contact-card h6 {
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+}
+
+.subscriptions-contact-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.subscriptions-contact-button svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+@media (max-width: 1024px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pricing-card {
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .pricing-card:last-child {
+    border-bottom: none;
+  }
+
+  .bespoke-section,
+  .final-cta {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .subscriptions-title h2 {
+    font-size: 2rem;
+  }
+}
