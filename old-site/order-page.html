@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order - S.A.U.M.R.S</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'American Typewriter', 'Courier Prime', monospace; 
+            color: #1a1a1a; 
+            line-height: 1.6; 
+            background: #fff;
+        }
+        
+        /* Header */
+        header { 
+            background: #000; 
+            color: #fff; 
+            padding: 1rem 2.5rem; 
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 1000; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .menu-toggle { 
+            background: none; 
+            border: none; 
+            color: #fff; 
+            cursor: pointer; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 4px; 
+            width: 22px; 
+        }
+        .menu-toggle span { 
+            display: block; 
+            height: 2px; 
+            background: #fff; 
+            width: 100%; 
+        }
+        .logo { 
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.3rem; 
+            letter-spacing: 8px; 
+            font-weight: normal;
+        }
+        .logo a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .cart-icon {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            position: relative;
+            transition: opacity 0.3s;
+        }
+        .cart-icon:hover {
+            opacity: 0.7;
+        }
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #fff;
+            color: #000;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        
+        /* Sidebar Menu */
+        .sidebar-menu { 
+            position: fixed; 
+            top: 0; 
+            left: -370px; 
+            width: 370px; 
+            height: 100vh; 
+            background: #000; 
+            z-index: 9999; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            padding-left: 3rem; 
+            transition: left 0.3s; 
+        }
+        .sidebar-menu.active { left: 0; }
+        .sidebar-menu a { 
+            color: #fff; 
+            text-decoration: none; 
+            font-size: 1.4rem; 
+            margin: 1.3rem 0; 
+            transition: opacity 0.3s; 
+        }
+        .sidebar-menu a:hover { opacity: 0.6; }
+        .menu-overlay { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.5); 
+            z-index: 9998; 
+            display: none; 
+        }
+        .menu-overlay.active { display: block; }
+        
+        /* Page Title */
+        .page-title { 
+            background: #f8f8f8; 
+            padding: 6rem 2rem 3rem; 
+            margin-top: 53px; 
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .page-title h1 { 
+            font-size: 2.5rem; 
+            font-weight: normal; 
+            letter-spacing: 2px; 
+        }
+        
+        /* Order Form Section */
+        .order-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 4rem;
+        }
+        
+        /* Form Container */
+        .form-container {
+            background: #fff;
+            padding: 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideUp 0.8s ease 0.2s forwards;
+        }
+        
+        .form-section {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            font-weight: normal;
+        }
+        
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            color: #333;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            font-family: 'American Typewriter', 'Courier Prime', monospace;
+            font-size: 0.9rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #000;
+        }
+        
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 1.5rem 0;
+        }
+        
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+        
+        /* Hidden shipping section */
+        .shipping-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.5s ease;
+        }
+        
+        .shipping-section.active {
+            display: block;
+            animation: fadeSlideIn 0.5s ease forwards;
+        }
+        
+        /* Order Summary */
+        .order-summary {
+            background: #f8f8f8;
+            padding: 2rem;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+            opacity: 0;
+            transform: translateX(30px);
+            animation: slideLeft 0.8s ease 0.4s forwards;
+        }
+        
+        .summary-title {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #000;
+            font-weight: normal;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .summary-item.total {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #ccc;
+        }
+        
+        .promo-code {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ccc;
+        }
+        
+        .promo-input-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .promo-input-group input {
+            flex: 1;
+        }
+        
+        .btn-apply {
+            padding: 0.8rem 1.5rem;
+            background: #000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-family: 'Courier Prime', monospace;
+            letter-spacing: 1px;
+            transition: background 0.3s;
+        }
+        
+        .btn-apply:hover {
+            background: #333;
+        }
+        
+        /* Submit Button */
+        .submit-section {
+            margin-top: 3rem;
+            text-align: center;
+        }
+        
+        .btn-submit {
+            padding: 1.2rem 4rem;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            font-family: 'Courier Prime', monospace;
+            transition: all 0.3s;
+        }
+        
+        .btn-submit:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+        
+        .security-note {
+            margin-top: 1.5rem;
+            font-size: 0.8rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .lock-icon {
+            font-size: 1rem;
+        }
+        
+        /* Success Message */
+        .success-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            z-index: 10000;
+            text-align: center;
+            max-width: 500px;
+        }
+        
+        .success-message.active {
+            display: block;
+            animation: popIn 0.5s ease;
+        }
+        
+        .success-message h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #28a745;
+            font-weight: normal;
+        }
+        
+        .success-message p {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn-close {
+            padding: 0.8rem 2rem;
+            background: #000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-family: 'Courier Prime', monospace;
+            letter-spacing: 1px;
+        }
+        
+        /* Footer */
+        .footer-social-bar { 
+            background: #3a3a3a; 
+            padding: 1.3rem 5rem; 
+            display: flex; 
+            gap: 2.5rem; 
+            color: #fff; 
+            margin-top: 5rem;
+        }
+        .social-links { 
+            display: flex; 
+            gap: 2rem; 
+        }
+        .social-links a { 
+            color: #fff; 
+            font-size: 1.2rem; 
+            text-decoration: none; 
+        }
+        footer { 
+            background: #fff; 
+            padding: 3rem 5rem 2rem; 
+        }
+        .footer-grid { 
+            display: grid; 
+            grid-template-columns: repeat(6, 1fr); 
+            gap: 2rem; 
+            margin: 2.5rem 0; 
+            font-size: 0.85rem; 
+        }
+        .footer-column h4 { 
+            margin-bottom: 0.8rem; 
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+        .footer-column a, 
+        .footer-column p { 
+            color: #000; 
+            text-decoration: none; 
+            display: block; 
+            margin-bottom: 0.5rem; 
+            transition: opacity 0.3s;
+        }
+        .footer-column a:hover {
+            opacity: 0.6;
+        }
+        
+        /* Footer Bottom */
+        .footer-bottom { 
+            background: #000; 
+            color: #fff; 
+            text-align: center; 
+            padding: 1.5rem; 
+            font-size: 0.8rem; 
+        }
+        .footer-links a { 
+            color: #fff; 
+            text-decoration: none; 
+            margin: 0 0.6rem; 
+            transition: opacity 0.3s;
+        }
+        .footer-links a:hover {
+            opacity: 0.7;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes popIn {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .order-container {
+                grid-template-columns: 1fr;
+            }
+            .order-summary {
+                position: relative;
+                top: 0;
+                margin-top: 2rem;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-title h1 {
+                font-size: 2rem;
+            }
+            .form-container {
+                padding: 1.5rem;
+            }
+            .order-summary {
+                padding: 1.5rem;
+            }
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button class="menu-toggle" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="logo"><a href="index.html">S.A.U.M.R.S</a></div>
+        <a href="order.html" class="cart-icon">
+            🛒
+            <span class="cart-count">0</span>
+        </a>
+    </header>
+
+    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+    <div class="sidebar-menu" id="sidebarMenu">
+        <a href="index.html">MAIN</a>
+        <a href="five-pillars.html">FIVE PILLARS</a>
+        <a href="ingredients.html">INGREDIENTS</a>
+        <a href="subscriptions.html">SUBSCRIPTIONS</a>
+        <a href="contact.html">CONTACT</a>
+    </div>
+
+    <section class="page-title">
+        <h1>Complete Your Order</h1>
+    </section>
+
+    <div class="order-container">
+        <div class="form-container">
+            <form id="orderForm">
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <h2 class="section-title">Personal Information</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input type="text" id="firstName" name="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input type="text" id="lastName" name="lastName" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                </div>
+
+                <!-- Billing Information -->
+                <div class="form-section">
+                    <h2 class="section-title">Billing Information</h2>
+                    <div class="form-group">
+                        <label for="cardName">Name on Card *</label>
+                        <input type="text" id="cardName" name="cardName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number *</label>
+                        <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expiry">Expiry Date *</label>
+                            <input type="text" id="expiry" name="expiry" placeholder="MM/YY" maxlength="5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV *</label>
+                            <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Billing Address -->
+                <div class="form-section">
+                    <h2 class="section-title">Billing Address</h2>
+                    <div class="form-group">
+                        <label for="billingAddress">Street Address *</label>
+                        <input type="text" id="billingAddress" name="billingAddress" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="billingAddress2">Apartment, Suite, etc. (Optional)</label>
+                        <input type="text" id="billingAddress2" name="billingAddress2">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="billingCity">City *</label>
+                            <input type="text" id="billingCity" name="billingCity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="billingState">State *</label>
+                            <select id="billingState" name="billingState" required>
+                                <option value="">Select State</option>
+                                <option value="AL">Alabama</option>
+                                <option value="AK">Alaska</option>
+                                <option value="AZ">Arizona</option>
+                                <option value="AR">Arkansas</option>
+                                <option value="CA">California</option>
+                                <option value="CO">Colorado</option>
+                                <option value="CT">Connecticut</option>
+                                <option value="DE">Delaware</option>
+                                <option value="FL">Florida</option>
+                                <option value="GA">Georgia</option>
+                                <option value="HI">Hawaii</option>
+                                <option value="ID">Idaho</option>
+                                <option value="IL">Illinois</option>
+                                <option value="IN">Indiana</option>
+                                <option value="IA">Iowa</option>
+                                <option value="KS">Kansas</option>
+                                <option value="KY">Kentucky</option>
+                                <option value="LA">Louisiana</option>
+                                <option value="ME">Maine</option>
+                                <option value="MD">Maryland</option>
+                                <option value="MA">Massachusetts</option>
+                                <option value="MI">Michigan</option>
+                                <option value="MN">Minnesota</option>
+                                <option value="MS">Mississippi</option>
+                                <option value="MO">Missouri</option>
+                                <option value="MT">Montana</option>
+                                <option value="NE">Nebraska</option>
+                                <option value="NV">Nevada</option>
+                                <option value="NH">New Hampshire</option>
+                                <option value="NJ">New Jersey</option>
+                                <option value="NM">New Mexico</option>
+                                <option value="NY">New York</option>
+                                <option value="NC">North Carolina</option>
+                                <option value="ND">North Dakota</option>
+                                <option value="OH">Ohio</option>
+                                <option value="OK">Oklahoma</option>
+                                <option value="OR">Oregon</option>
+                                <option value="PA">Pennsylvania</option>
+                                <option value="RI">Rhode Island</option>
+                                <option value="SC">South Carolina</option>
+                                <option value="SD">South Dakota</option>
+                                <option value="TN">Tennessee</option>
+                                <option value="TX">Texas</option>
+                                <option value="UT">Utah</option>
+                                <option value="VT">Vermont</option>
+                                <option value="VA">Virginia</option>
+                                <option value="WA">Washington</option>
+                                <option value="WV">West Virginia</option>
+                                <option value="WI">Wisconsin</option>
+                                <option value="WY">Wyoming</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="billingZip">ZIP Code *</label>
+                        <input type="text" id="billingZip" name="billingZip" maxlength="10" required>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="sameAddress" name="sameAddress" checked>
+                        <label for="sameAddress">Shipping address is the same as billing address</label>
+                    </div>
+                </div>
+
+                <!-- Shipping Address (Hidden by default) -->
+                <div class="form-section shipping-section" id="shippingSection">
+                    <h2 class="section-title">Shipping Address</h2>
+                    <div class="form-group">
+                        <label for="shippingAddress">Street Address *</label>
+                        <input type="text" id="shippingAddress" name="shippingAddress">
+                    </div>
+                    <div class="form-group">
+                        <label for="shippingAddress2">Apartment, Suite, etc. (Optional)</label>
+                        <input type="text" id="shippingAddress2" name="shippingAddress2">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="shippingCity">City *</label>
+                            <input type="text" id="shippingCity" name="shippingCity">
+                        </div>
+                        <div class="form-group">
+                            <label for="shippingState">State *</label>
+                            <select id="shippingState" name="shippingState">
+                                <option value="">Select State</option>
+                                <option value="AL">Alabama</option>
+                                <option value="AK">Alaska</option>
+                                <option value="AZ">Arizona</option>
+                                <option value="AR">Arkansas</option>
+                                <option value="CA">California</option>
+                                <option value="CO">Colorado</option>
+                                <option value="CT">Connecticut</option>
+                                <option value="DE">Delaware</option>
+                                <option value="FL">Florida</option>
+                                <option value="GA">Georgia</option>
+                                <option value="HI">Hawaii</option>
+                                <option value="ID">Idaho</option>
+                                <option value="IL">Illinois</option>
+                                <option value="IN">Indiana</option>
+                                <option value="IA">Iowa</option>
+                                <option value="KS">Kansas</option>
+                                <option value="KY">Kentucky</option>
+                                <option value="LA">Louisiana</option>
+                                <option value="ME">Maine</option>
+                                <option value="MD">Maryland</option>
+                                <option value="MA">Massachusetts</option>
+                                <option value="MI">Michigan</option>
+                                <option value="MN">Minnesota</option>
+                                <option value="MS">Mississippi</option>
+                                <option value="MO">Missouri</option>
+                                <option value="MT">Montana</option>
+                                <option value="NE">Nebraska</option>
+                                <option value="NV">Nevada</option>
+                                <option value="NH">New Hampshire</option>
+                                <option value="NJ">New Jersey</option>
+                                <option value="NM">New Mexico</option>
+                                <option value="NY">New York</option>
+                                <option value="NC">North Carolina</option>
+                                <option value="ND">North Dakota</option>
+                                <option value="OH">Ohio</option>
+                                <option value="OK">Oklahoma</option>
+                                <option value="OR">Oregon</option>
+                                <option value="PA">Pennsylvania</option>
+                                <option value="RI">Rhode Island</option>
+                                <option value="SC">South Carolina</option>
+                                <option value="SD">South Dakota</option>
+                                <option value="TN">Tennessee</option>
+                                <option value="TX">Texas</option>
+                                <option value="UT">Utah</option>
+                                <option value="VT">Vermont</option>
+                                <option value="VA">Virginia</option>
+                                <option value="WA">Washington</option>
+                                <option value="WV">West Virginia</option>
+                                <option value="WI">Wisconsin</option>
+                                <option value="WY">Wyoming</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="shippingZip">ZIP Code *</label>
+                        <input type="text" id="shippingZip" name="shippingZip" maxlength="10">
+                    </div>
+                </div>
+
+                <div class="submit-section">
+                    <button type="submit" class="btn-submit">COMPLETE ORDER</button>
+                    <div class="security-note">
+                        <span class="lock-icon">🔒</span>
+                        <span>Your payment information is secure and will be processed manually by our team</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="order-summary">
+            <h2 class="summary-title">Order Summary</h2>
+            <div class="summary-item">
+                <span>Subscription Type:</span>
+                <span id="subscriptionType">Bi-Annually</span>
+            </div>
+            <div class="summary-item">
+                <span>Product:</span>
+                <span>SAUMRS Package</span>
+            </div>
+            <div class="summary-item">
+                <span>Quantity:</span>
+                <span id="quantity">11Kg</span>
+            </div>
+            <div class="summary-item">
+                <span>Subtotal:</span>
+                <span id="subtotal">$1,650.00</span>
+            </div>
+            <div class="summary-item">
+                <span>Shipping:</span>
+                <span>FREE</span>
+            </div>
+            <div class="summary-item">
+                <span>Tax:</span>
+                <span id="tax">$0.00</span>
+            </div>
+            <div class="summary-item total">
+                <span>Total:</span>
+                <span id="total">$1,650.00</span>
+            </div>
+            
+            <div class="promo-code">
+                <label for="promoCode">Promo Code</label>
+                <div class="promo-input-group">
+                    <input type="text" id="promoCode" placeholder="Enter code">
+                    <button type="button" class="btn-apply">APPLY</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message Modal -->
+    <div class="success-message" id="successMessage">
+        <h2>✓ Order Received!</h2>
+        <p>Thank you for your order. Someone from our team will be in contact with you shortly to confirm your order and arrange delivery.</p>
+        <p>A confirmation email has been sent to your email address.</p>
+        <button class="btn-close" onclick="closeSuccess()">CLOSE</button>
+    </div>
+
+    <div class="footer-social-bar">
+        <h3>Let's get Social</h3>
+        <div class="social-links">
+            <a href="#">f</a>
+            <a href="#">𝕏</a>
+            <a href="#">▶</a>
+            <a href="#">📷</a>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-column">
+                <h4>HELP</h4>
+                <a href="mailto:Support@SAUMRS.com">Support@SAUMRS.com</a>
+            </div>
+            <div class="footer-column">
+                <h4>CONTACT</h4>
+                <a href="tel:+18774728677">1 (877) 4-SAUMRS</a>
+            </div>
+            <div class="footer-column">
+                <h4>ADDRESS</h4>
+                <p>1000 Brickell Ave<br>Ste 715<br>Miami, FL 33131</p>
+            </div>
+            <div class="footer-column">
+                <h4>RELEASES</h4>
+                <a href="mailto:Press@SAUMRS.com">Press@SAUMRS.com</a>
+            </div>
+            <div class="footer-column">
+                <h4>AFFILIATES</h4>
+                <a href="mailto:Affiliates@SAUMRS.com">Affiliates@SAUMRS.com</a>
+            </div>
+            <div class="footer-column">
+                <h4>LEGAL</h4>
+                <a href="mailto:Legal@SAUMRS.com">Legal@SAUMRS.com</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="footer-bottom">
+        <div class="footer-links">
+            <a href="#">Cookie Policy</a> • 
+            <a href="#">Privacy</a> • 
+            <a href="#">Terms of use</a>
+        </div>
+        <p>© 2023 SAUMRS ™</p>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('sidebarMenu').classList.toggle('active');
+            document.getElementById('menuOverlay').classList.toggle('active');
+        }
+
+        // Handle same address checkbox
+        const sameAddressCheckbox = document.getElementById('sameAddress');
+        const shippingSection = document.getElementById('shippingSection');
+        
+        sameAddressCheckbox.addEventListener('change', function() {
+            if (!this.checked) {
+                shippingSection.classList.add('active');
+                // Make shipping fields required
+                document.getElementById('shippingAddress').required = true;
+                document.getElementById('shippingCity').required = true;
+                document.getElementById('shippingState').required = true;
+                document.getElementById('shippingZip').required = true;
+            } else {
+                shippingSection.classList.remove('active');
+                // Remove required from shipping fields
+                document.getElementById('shippingAddress').required = false;
+                document.getElementById('shippingCity').required = false;
+                document.getElementById('shippingState').required = false;
+                document.getElementById('shippingZip').required = false;
+            }
+        });
+
+        // Format card number input
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            e.target.value = formattedValue;
+        });
+
+        // Format expiry date
+        document.getElementById('expiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            if (value.length >= 2) {
+                value = value.substring(0,2) + '/' + value.substring(2,4);
+            }
+            e.target.value = value;
+        });
+
+        // Only allow numbers for CVV
+        document.getElementById('cvv').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/[^0-9]/gi, '');
+        });
+
+        // Handle form submission
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = new FormData(this);
+            const orderData = {
+                personalInfo: {
+                    firstName: formData.get('firstName'),
+                    lastName: formData.get('lastName'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone')
+                },
+                billing: {
+                    cardName: formData.get('cardName'),
+                    cardNumber: formData.get('cardNumber'),
+                    expiry: formData.get('expiry'),
+                    cvv: formData.get('cvv')
+                },
+                billingAddress: {
+                    street: formData.get('billingAddress'),
+                    apartment: formData.get('billingAddress2'),
+                    city: formData.get('billingCity'),
+                    state: formData.get('billingState'),
+                    zip: formData.get('billingZip')
+                },
+                shippingAddress: sameAddressCheckbox.checked ? 'Same as billing' : {
+                    street: formData.get('shippingAddress'),
+                    apartment: formData.get('shippingAddress2'),
+                    city: formData.get('shippingCity'),
+                    state: formData.get('shippingState'),
+                    zip: formData.get('shippingZip')
+                },
+                orderSummary: {
+                    subscriptionType: document.getElementById('subscriptionType').innerText,
+                    quantity: document.getElementById('quantity').innerText,
+                    subtotal: document.getElementById('subtotal').innerText,
+                    tax: document.getElementById('tax').innerText,
+                    total: document.getElementById('total').innerText,
+                    promoCode: document.getElementById('promoCode').value
+                }
+            };
+            
+            // In a real implementation, this would send the data to SAUMRS via email
+            console.log('Order Data to be sent to SAUMRS:', orderData);
+            
+            // Show success message
+            document.getElementById('successMessage').classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Reset form after a delay
+            setTimeout(() => {
+                this.reset();
+                sameAddressCheckbox.checked = true;
+                shippingSection.classList.remove('active');
+            }, 1000);
+        });
+
+        // Close success message
+        function closeSuccess() {
+            document.getElementById('successMessage').classList.remove('active');
+        }
+
+        // Handle promo code
+        document.querySelector('.btn-apply').addEventListener('click', function() {
+            const promoCode = document.getElementById('promoCode').value;
+            if (promoCode) {
+                console.log('Applying promo code:', promoCode);
+                alert('Promo code will be verified by our team');
+            }
+        });
+
+        // Get subscription type from URL parameter (if coming from subscription page)
+        const urlParams = new URLSearchParams(window.location.search);
+        const subscription = urlParams.get('subscription');
+        if (subscription) {
+            document.getElementById('subscriptionType').innerText = subscription;
+            // Update price based on subscription type
+            switch(subscription) {
+                case '3-Month':
+                    document.getElementById('quantity').innerText = '5.5Kg';
+                    document.getElementById('subtotal').innerText = '$900.00';
+                    document.getElementById('total').innerText = '$900.00';
+                    break;
+                case 'Bi-Annually':
+                    document.getElementById('quantity').innerText = '11Kg';
+                    document.getElementById('subtotal').innerText = '$1,650.00';
+                    document.getElementById('total').innerText = '$1,650.00';
+                    break;
+                case 'Yearly':
+                    document.getElementById('quantity').innerText = '22Kg';
+                    document.getElementById('subtotal').innerText = '$3,000.00';
+                    document.getElementById('total').innerText = '$3,000.00';
+                    break;
+            }
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe form sections for animation
+        document.querySelectorAll('.form-section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'all 0.6s ease';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingredients - S.A.U.M.R.S</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'American Typewriter', monospace; color: #1a1a1a; line-height: 1.6; background: #f5f5f5; }
+        
+        header { background: #000; color: #fff; padding: 1rem 2.5rem; position: fixed; top: 0; width: 100%; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+        .logo { font-size: 1.3rem; letter-spacing: 6px; }
+        .menu-toggle { position: absolute; left: 2.5rem; background: none; border: none; color: #fff; cursor: pointer; display: flex; flex-direction: column; gap: 4px; width: 22px; }
+        .menu-toggle span { display: block; height: 2px; background: #fff; width: 100%; }
+        .sidebar-menu { position: fixed; top: 0; left: -370px; width: 370px; height: 100vh; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; padding-left: 3rem; transition: left 0.3s; }
+        .sidebar-menu.active { left: 0; }
+        .sidebar-menu a { color: #fff; text-decoration: none; font-size: 1.4rem; margin: 1.3rem 0; transition: opacity 0.3s; }
+        .sidebar-menu a:hover { opacity: 0.6; }
+        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9998; display: none; }
+        .menu-overlay.active { display: block; }
+        
+        .hero-section { background: #fff; padding: 6rem 5rem 3rem; margin-top: 53px; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .hero-content h1 { font-size: 2rem; margin-bottom: 1rem; }
+        .hero-content .subtitle { font-size: 1rem; color: #666; margin-bottom: 2rem; }
+        .hero-content p { font-size: 0.9rem; line-height: 1.8; margin-bottom: 1.5rem; }
+        .hero-content .view-button { display: inline-block; padding: 0.8rem 2rem; background: #000; color: #fff; text-decoration: none; margin-top: 1rem; }
+        .hero-image { display: flex; justify-content: center; align-items: center; }
+        .hero-image img { width: 100%; max-width: 400px; }
+        
+        .press-bar { background: #3a3a3a; padding: 1.5rem 5rem; min-height: 60px; display: flex; justify-content: space-around; align-items: center; }
+        /* Space for future press logos or text */
+        
+        .intro-section { background: #fff; padding: 3rem 5rem; text-align: center; }
+        .intro-section h2 { font-size: 1.5rem; margin-bottom: 2rem; }
+        .intro-section p { font-size: 0.9rem; line-height: 1.8; max-width: 1200px; margin: 0 auto 1rem; }
+        
+        .ingredients-grid { background: #f5f5f5; padding: 4rem 5rem; }
+        .grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; max-width: 1400px; margin: 0 auto; }
+        .ingredient-card { background: #fff; padding: 2rem; text-align: center; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); opacity: 0; transform: translateY(30px) scale(0.95); transition: all 0.7s ease; }
+        .ingredient-card.animate { opacity: 1; transform: translateY(0) scale(1); }
+        .ingredient-image { width: 100%; height: 150px; background: #f0f0f0; border-radius: 8px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+        .ingredient-card h3 { font-size: 1rem; margin-bottom: 1rem; }
+        .ingredient-card p { font-size: 0.8rem; line-height: 1.6; color: #555; }
+        
+        .subscribe-section { background: #d5d5d5; padding: 4rem 5rem; text-align: center; }
+        .subscribe-section h2 { font-size: 2rem; margin-bottom: 2rem; }
+        .subscribe-buttons { display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; }
+        .btn-subscribe { display: inline-block; padding: 1rem 2.5rem; background: #000; color: #fff; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; }
+        
+        .footer-social-bar { background: #3a3a3a; padding: 1.3rem 5rem; display: flex; gap: 2.5rem; color: #fff; }
+        .social-links { display: flex; gap: 2rem; }
+        .social-links a { color: #fff; font-size: 1.2rem; text-decoration: none; }
+        footer { background: #fff; padding: 3rem 5rem 2rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2rem; margin: 2.5rem 0; font-size: 0.85rem; }
+        .footer-column h4 { margin-bottom: 0.8rem; }
+        .footer-column a, .footer-column p { color: #000; text-decoration: none; display: block; margin-bottom: 0.5rem; }
+        .footer-bottom { background: #000; color: #fff; text-align: center; padding: 1.5rem; font-size: 0.8rem; }
+        .footer-links a { color: #fff; text-decoration: none; margin: 0 0.6rem; }
+        
+        @media (max-width: 1024px) {
+            .hero-section { grid-template-columns: 1fr; }
+            .grid-container { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .grid-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button class="menu-toggle" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="logo">S.A.U.M.R.S</div>
+    </header>
+
+    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+    <div class="sidebar-menu" id="sidebarMenu">
+        <a href="index.html">MAIN</a>
+        <a href="five-pillars.html">FIVE PILLARS</a>
+        <a href="ingredients.html">INGREDIENTS</a>
+        <a href="subscriptions.html">SUBSCRIPTIONS</a>
+        <a href="contact.html">CONTACT</a>
+    </div>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>POWERFUL SUPERFOODS and ADAPTOGENS IN EVERY INGREDIENT</h1>
+            <p class="subtitle"><strong>From Breakfast to Snacks!</strong></p>
+            <p>Explore our comprehensive collection of thoughtfully curated superfoods and adaptogens. Each ingredient is carefully selected for its unique nutritional profile and health benefits.</p>
+            <a href="#" class="view-button">▶ View</a>
+        </div>
+        <div class="hero-image">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect fill='%23f0f0f0' width='400' height='400' rx='200'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-size='60' fill='%23999'%3E🥬%3C/text%3E%3C/svg%3E" alt="Superfood">
+        </div>
+    </section>
+
+    <div class="press-bar">
+        <!-- Empty space for future press logos/text - can add content here later -->
+    </div>
+
+    <section class="intro-section">
+        <h2>Our Superfood Arsenal</h2>
+        <p>Every ingredient in SAUMRS is meticulously sourced and scientifically validated to provide maximum nutritional benefit. From powerful adaptogens to nutrient-dense superfoods, each component plays a vital role in your optimal health and wellness.</p>
+    </section>
+
+    <section class="ingredients-grid">
+        <div class="grid-container">
+            <div class="ingredient-card">
+                <div class="ingredient-image">🥬</div>
+                <h3>Spirulina</h3>
+                <p>A nutrient-dense blue-green algae packed with protein, vitamins, and minerals. Supports immune function and provides powerful antioxidants.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🍌</div>
+                <h3>Maca Root</h3>
+                <p>An adaptogenic root that helps balance hormones, boost energy, and enhance mental clarity naturally.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🧡</div>
+                <h3>Turmeric</h3>
+                <p>Contains curcumin, a powerful anti-inflammatory compound that supports joint health and overall wellness.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🍋</div>
+                <h3>Ashwagandha</h3>
+                <p>Ancient adaptogen that reduces stress, improves cognitive function, and supports balanced energy levels.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🌿</div>
+                <h3>Chlorella</h3>
+                <p>Detoxifying green algae rich in chlorophyll, helping to cleanse and nourish at the cellular level.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🍇</div>
+                <h3>Acai Berry</h3>
+                <p>Antioxidant powerhouse that supports heart health, brain function, and provides sustained energy.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🥥</div>
+                <h3>MCT Oil</h3>
+                <p>Medium-chain triglycerides that provide quick, clean energy and support cognitive performance.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🍄</div>
+                <h3>Lion's Mane</h3>
+                <p>Medicinal mushroom that enhances cognitive function, memory, and supports nervous system health.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🌱</div>
+                <h3>Moringa</h3>
+                <p>Nutrient-rich superfood containing essential amino acids, vitamins, and minerals for complete nutrition.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🫐</div>
+                <h3>Goji Berry</h3>
+                <p>Ancient superfruit packed with antioxidants, vitamins, and immune-supporting compounds.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🌾</div>
+                <h3>Chia Seeds</h3>
+                <p>Rich in omega-3 fatty acids, fiber, and protein. Supports heart health and digestive wellness.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🥜</div>
+                <h3>Hemp Seeds</h3>
+                <p>Complete protein source with optimal omega fatty acid ratios for balanced nutrition.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🍵</div>
+                <h3>Matcha</h3>
+                <p>Concentrated green tea powder rich in L-theanine and antioxidants for calm, focused energy.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🌰</div>
+                <h3>Cacao</h3>
+                <p>Raw chocolate packed with flavonoids, magnesium, and mood-enhancing compounds.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🥕</div>
+                <h3>Beetroot</h3>
+                <p>Nitrate-rich vegetable that supports cardiovascular health and athletic performance.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🫚</div>
+                <h3>Ginger</h3>
+                <p>Anti-inflammatory root that aids digestion, reduces nausea, and supports immune function.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🍠</div>
+                <h3>Reishi</h3>
+                <p>Adaptogenic mushroom that supports immune health, reduces stress, and promotes restful sleep.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🥒</div>
+                <h3>Wheatgrass</h3>
+                <p>Nutrient-dense grass rich in chlorophyll, vitamins, and enzymes for cellular health.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🌸</div>
+                <h3>Rhodiola</h3>
+                <p>Adaptogen that combats fatigue, enhances mental performance, and reduces stress impact.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🍯</div>
+                <h3>Bee Pollen</h3>
+                <p>Nature's multivitamin containing proteins, vitamins, minerals, and antioxidants.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🥗</div>
+                <h3>Kale</h3>
+                <p>Nutrient powerhouse loaded with vitamins K, A, C, and powerful antioxidants.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🫑</div>
+                <h3>Spinach</h3>
+                <p>Iron-rich leafy green supporting energy production and overall vitality.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🥦</div>
+                <h3>Broccoli</h3>
+                <p>Cruciferous vegetable with detoxifying properties and cancer-fighting compounds.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🌶️</div>
+                <h3>Cayenne</h3>
+                <p>Metabolism-boosting spice that supports circulation and digestive health.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🥝</div>
+                <h3>Baobab</h3>
+                <p>African superfruit rich in vitamin C, fiber, and prebiotic compounds for gut health.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🌻</div>
+                <h3>Sunflower Lecithin</h3>
+                <p>Natural emulsifier that supports brain health and cellular function.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🍊</div>
+                <h3>Camu Camu</h3>
+                <p>Amazonian berry with the highest natural vitamin C content for immune support.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🌿</div>
+                <h3>Kelp</h3>
+                <p>Iodine-rich seaweed supporting thyroid function and metabolic health.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🥥</div>
+                <h3>Coconut Water Powder</h3>
+                <p>Natural electrolyte source for hydration and mineral replenishment.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🫘</div>
+                <h3>Pea Protein</h3>
+                <p>Plant-based complete protein supporting muscle recovery and growth.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🌾</div>
+                <h3>Brown Rice Protein</h3>
+                <p>Hypoallergenic protein source with balanced amino acid profile.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🥜</div>
+                <h3>Almond</h3>
+                <p>Vitamin E-rich nut supporting skin health and providing healthy fats.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🍓</div>
+                <h3>Monk Fruit</h3>
+                <p>Natural zero-calorie sweetener with antioxidant properties.</p>
+            </div>
+            
+            <div class="ingredient-card">
+                <div class="ingredient-image">🌿</div>
+                <h3>Stevia</h3>
+                <p>Plant-based sweetener that supports healthy blood sugar levels.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="subscribe-section">
+        <h2>Subscribe Now</h2>
+        <p>Experience the power of all 34 superfood ingredients working together.</p>
+        <div class="subscribe-buttons">
+            <a href="tel:+18774728677" class="btn-subscribe">📞 PHONE US</a>
+            <a href="mailto:Booking@SAUMRS.COM" class="btn-subscribe">✉️ EMAIL US</a>
+        </div>
+    </section>
+
+    <div class="footer-social-bar">
+        <h3>Let's get Social</h3>
+        <div class="social-links">
+            <a href="#">f</a>
+            <a href="#">𝕏</a>
+            <a href="#">▶</a>
+            <a href="#">📷</a>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-column">
+                <h4>HELP</h4>
+                <a href="mailto:Support@SAUMRS.com">Support@SAUMRS.com</a>
+            </div>
+            <div class="footer-column">
+                <h4>CONTACT</h4>
+                <a href="tel:+18774728677">1 (877) 4-SAUMRS</a>
+            </div>
+            <div class="footer-column">
+                <h4>ADDRESS</h4>
+                <p>1000 Brickell Ave<br>Ste 715<br>Miami, FL 33131</p>
+            </div>
+            <div class="footer-column">
+                <h4>RELEASES</h4>
+                <a href="mailto:Press@SAUMRS.com">Press@SAUMRS.com</a>
+            </div>
+            <div class="footer-column">
+                <h4>AFFILIATES</h4>
+                <a href="mailto:Affiliates@SAUMRS.com">Affiliates@SAUMRS.com</a>
+            </div>
+            <div class="footer-column">
+                <h4>LEGAL</h4>
+                <a href="mailto:Legal@SAUMRS.com">Legal@SAUMRS.com</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="footer-bottom">
+        <div class="footer-links">
+            <a href="#">Cookie Policy</a> • 
+            <a href="#">Privacy</a> • 
+            <a href="#">Terms of use</a>
+        </div>
+        <p>© 2023 SAUMRS ™</p>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('sidebarMenu').classList.toggle('active');
+            document.getElementById('menuOverlay').classList.toggle('active');
+        }
+
+        // Scroll Animation Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('animate');
+                    }, index * 50);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -80px 0px' });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const animateElements = document.querySelectorAll('.ingredient-card');
+            animateElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>

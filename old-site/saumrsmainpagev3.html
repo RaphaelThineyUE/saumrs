@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.A.U.M.R.S - Superfoods make Superhumans</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'American Typewriter', monospace; color: #1a1a1a; line-height: 1.6; overflow-x: hidden; }
+        header { background: #000; color: #fff; padding: 1rem 2.5rem; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.3rem; letter-spacing: 6px; font-weight: 400; }
+        .header-icons { display: flex; gap: 2rem; align-items: center; }
+        .menu-toggle { background: none; border: none; color: #fff; cursor: pointer; display: flex; flex-direction: column; gap: 4px; width: 22px; }
+        .menu-toggle span { display: block; height: 2px; background: #fff; width: 100%; transition: all 0.3s; }
+        .search-icon { width: 18px; height: 18px; position: relative; cursor: pointer; }
+        .search-icon::before { content: ''; position: absolute; width: 12px; height: 12px; border: 2px solid #fff; border-radius: 50%; }
+        .search-icon::after { content: ''; position: absolute; width: 2px; height: 5px; background: #fff; transform: rotate(45deg); bottom: 0; right: 0; }
+        .sidebar-menu { position: fixed; top: 0; left: -370px; width: 370px; height: 100vh; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; padding-left: 3rem; transition: left 0.3s; }
+        .sidebar-menu.active { left: 0; }
+        .sidebar-menu a { color: #fff; text-decoration: none; font-size: 1.4rem; margin: 1.3rem 0; transition: all 0.3s; opacity: 0; transform: translateX(-20px); }
+        .sidebar-menu.active a { opacity: 1; transform: translateX(0); }
+        .sidebar-menu.active a:nth-child(1) { transition-delay: 0.1s; }
+        .sidebar-menu.active a:nth-child(2) { transition-delay: 0.2s; }
+        .sidebar-menu.active a:nth-child(3) { transition-delay: 0.3s; }
+        .sidebar-menu.active a:nth-child(4) { transition-delay: 0.4s; }
+        .sidebar-menu.active a:nth-child(5) { transition-delay: 0.5s; }
+        .sidebar-menu a:hover { opacity: 0.6; padding-left: 1rem; background: rgba(255,255,255,0.1); }
+        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9998; display: none; }
+        .menu-overlay.active { display: block; }
+        .top-text-banner { background: #fff; padding: 1.8rem 0; margin-top: 53px; display: flex; justify-content: center; gap: 3rem; }
+        .top-text-banner span { font-size: 1.8rem; letter-spacing: 1px; }
+        .hero { background: #fff; padding: 3rem 8rem; display: grid; grid-template-columns: 1.2fr 1fr; gap: 5rem; align-items: center; min-height: 550px; }
+        .hero-content { opacity: 0; animation: fadeInLeft 1s ease forwards 0.3s; }
+        .hero-content h1 { font-size: 1.2rem; margin-bottom: 1.5rem; }
+        .hero-content p { font-size: 0.9rem; margin-bottom: 1.2rem; }
+        .hero-image { display: flex; justify-content: center; opacity: 0; animation: fadeInRight 1s ease forwards 0.3s; }
+        .product-placeholder { width: 100%; max-width: 350px; aspect-ratio: 3/4; background: linear-gradient(135deg, #4a4a4a, #2a2a2a); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; text-align: center; padding: 2rem; }
+        .press-section { background: #3a3a3a; padding: 2rem 5rem; display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap; }
+        .press-logo { color: #999; font-size: 1.1rem; font-weight: bold; opacity: 0.7; }
+        .superfoods { background: #fff; padding: 4rem 5rem; display: grid; grid-template-columns: 1fr 1.2fr; gap: 4rem; }
+        .athlete-placeholder { width: 100%; max-width: 500px; aspect-ratio: 3/4; background: linear-gradient(135deg, #e8e8e8, #d0d0d0); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #666; }
+        .athlete-image { opacity: 0; transform: scale(0.95); transition: all 0.8s ease; }
+        .athlete-image.animate { opacity: 1; transform: scale(1); }
+        .superfoods-content { opacity: 0; transform: translateX(50px); transition: all 0.8s ease; }
+        .superfoods-content.animate { opacity: 1; transform: translateX(0); }
+        .superfoods-content h2 { font-size: 2.2rem; margin-bottom: 2.5rem; }
+        .icons-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+        .icon-item { display: flex; flex-direction: column; align-items: center; text-align: center; opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+        .icon-item.animate { opacity: 1; transform: translateY(0); }
+        .icon-circle { width: 70px; height: 70px; border: 2px solid #2a2a2a; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 0.8rem; font-size: 1.8rem; }
+        .icon-item h3 { font-size: 0.95rem; margin-bottom: 0.5rem; }
+        .icon-item p { font-size: 0.8rem; color: #666; }
+        .ingredients-section { text-align: center; padding: 2.5rem; background: #fff; }
+        .btn-primary { display: inline-block; padding: 0.9rem 2.2rem; background: #000; color: #fff; text-decoration: none; font-size: 0.95rem; letter-spacing: 1.5px; transition: all 0.3s; }
+        .btn-primary:hover { background: #333; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
+        .subscribe-section { background: #d5d5d5; padding: 4rem 5rem; text-align: center; }
+        .subscribe-section h2 { font-size: 2rem; margin-bottom: 1.2rem; }
+        .subscribe-section p { font-size: 0.9rem; margin-bottom: 1rem; max-width: 1200px; margin-left: auto; margin-right: auto; }
+        .subscribe-options { display: flex; justify-content: center; gap: 2.5rem; margin-top: 2.5rem; }
+        .subscribe-card { background: #fff; padding: 2rem; border-radius: 6px; min-width: 250px; opacity: 0; transform: scale(0.9); transition: all 0.7s ease; }
+        .subscribe-card.animate { opacity: 1; transform: scale(1); }
+        .subscribe-card h3 { font-size: 1.1rem; margin-bottom: 0.8rem; }
+        .subscribe-card p { color: #555; margin-bottom: 1.3rem; }
+        .super-nutrition { background: #fff; padding: 4rem 3rem; text-align: center; }
+        .super-nutrition h2 { font-size: 2.2rem; margin-bottom: 3rem; }
+        .nutrition-top-row, .nutrition-bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8rem; padding: 0 3rem; margin-bottom: 2.5rem; }
+        .nutrition-item { text-align: left; opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .nutrition-item.animate { opacity: 1; transform: translateY(0); }
+        .nutrition-icon { width: 50px; height: 50px; background: #e8f5e9; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.8rem; font-size: 1.5rem; }
+        .nutrition-item h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+        .nutrition-item p { font-size: 0.85rem; color: #555; }
+        .nutrition-middle { position: relative; height: 700px; margin: 2rem 0; }
+        .nutrition-circle { position: absolute; width: 700px; height: 700px; border: 2px dashed #ccc; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .center-product-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); z-index: 2; max-width: 420px; opacity: 0; transition: all 1s ease; }
+        .center-product-wrapper.animate { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        .nutrition-item-positioned { position: absolute; width: 280px; opacity: 0; transition: all 0.8s ease; }
+        .nutrition-item-positioned.animate { opacity: 1; }
+        .nutrition-item-positioned.left-top { left: 50px; top: 80px; }
+        .nutrition-item-positioned.left-bottom { left: 50px; bottom: 80px; }
+        .nutrition-item-positioned.right-top { right: 50px; top: 80px; text-align: right; }
+        .nutrition-item-positioned.right-bottom { right: 50px; bottom: 80px; text-align: right; }
+        .nutrition-item-positioned.right-top .nutrition-icon, .nutrition-item-positioned.right-bottom .nutrition-icon { margin-left: auto; }
+        .testimonials { background: #d0d0d0; padding: 4rem 5rem; }
+        .testimonials h2 { text-align: center; font-size: 2.2rem; margin-bottom: 3rem; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; max-width: 1200px; margin: 0 auto; }
+        .testimonial-card { background: #b5b5b5; padding: 2rem; border-radius: 8px; text-align: center; opacity: 0; transform: translateY(30px) scale(0.95); transition: all 0.7s ease; }
+        .testimonial-card.animate { opacity: 1; transform: translateY(0) scale(1); }
+        .testimonial-avatar { width: 100px; height: 100px; border-radius: 50%; background: #888; margin: 0 auto 1.2rem; }
+        .testimonial-text { font-style: italic; margin-bottom: 1.2rem; font-size: 0.85rem; }
+        .testimonial-stars { margin-bottom: 0.8rem; font-size: 1.1rem; }
+        .pricing-section { background: #e8e8e8; padding: 4rem 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+        .pricing-content h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+        .pricing-content p { color: #444; margin-bottom: 1.2rem; }
+        .two-column-section { display: grid; grid-template-columns: 1fr 1fr; min-height: 450px; }
+        .column-image { background: #b8b8b8; display: flex; align-items: center; justify-content: center; color: #555; font-size: 1.2rem; padding: 3rem; text-align: center; }
+        .column-content { background: #8a8a8a; display: flex; flex-direction: column; justify-content: center; padding: 3rem 4rem; }
+        .column-content h2 { font-size: 2.2rem; color: #fff; margin-bottom: 1.2rem; }
+        .column-content p { color: #fff; }
+        .faq-section { background: #fff; padding: 4rem 5rem; display: grid; grid-template-columns: 1fr 1.8fr; gap: 5rem; }
+        .faq-list h2 { font-size: 2rem; margin-bottom: 1.2rem; }
+        .faq-intro { margin-bottom: 1.8rem; color: #555; }
+        .faq-item { border-bottom: 1px solid #ddd; cursor: pointer; transition: all 0.3s; }
+        .faq-item:hover .faq-question { padding-left: 12px; }
+        .faq-question { padding: 1.1rem 0; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.4s ease; padding: 0 1rem; background: #f9f9f9; }
+        .faq-answer.active { max-height: 500px; padding: 1.5rem; }
+        .faq-arrow { transition: transform 0.3s; font-size: 1.2rem; }
+        .faq-arrow.active { transform: rotate(90deg); }
+        .footer-social-bar { background: #3a3a3a; padding: 1.3rem 5rem; display: flex; gap: 2.5rem; color: #fff; }
+        .social-links { display: flex; gap: 2rem; }
+        .social-links a { color: #fff; font-size: 1.2rem; text-decoration: none; }
+        footer { background: #fff; padding: 3rem 5rem 2rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2rem; margin: 2.5rem 0; font-size: 0.85rem; }
+        .footer-column h4 { margin-bottom: 0.8rem; }
+        .footer-column a, .footer-column p { color: #000; text-decoration: none; display: block; margin-bottom: 0.5rem; }
+        .footer-bottom { background: #000; color: #fff; text-align: center; padding: 1.5rem; font-size: 0.8rem; }
+        .footer-links a { color: #fff; text-decoration: none; margin: 0 0.6rem; }
+        @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+        @media (max-width: 1024px) {
+            .hero, .superfoods, .pricing-section, .two-column-section, .faq-section { grid-template-columns: 1fr; }
+            .icons-grid { grid-template-columns: repeat(2, 1fr); }
+            .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button class="menu-toggle" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="logo">S.A.U.M.R.S</div>
+        <div class="header-icons">
+            <div class="search-icon"></div>
+        </div>
+    </header>
+
+    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+    <div class="sidebar-menu" id="sidebarMenu">
+        <a href="#main">MAIN</a>
+        <a href="#pillars">FIVE PILLARS</a>
+        <a href="#ingredients">INGREDIENTS</a>
+        <a href="#subscriptions">SUBSCRIPTIONS</a>
+        <a href="#contact">CONTACT</a>
+    </div>
+
+    <div class="top-text-banner">
+        <span>Super</span><span>Awesome</span><span>Ultimate</span><span>Meal</span><span>Replacement</span><span>Shake</span>
+    </div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to the SAUMRS family.</h1>
+            <p>SAUMRS is RAW, Whole Food, Anabolic Energy. Pure, Organic, Nutrient Dense Superfoods. Packed with Adaptogens and Prebiotics.</p>
+            <p>No fillers, no added sugar, nothing artificial... period.</p>
+            <p>Each 60-90gram serving of SAUMRS is uniquely formulated so that every single ingredient meets or exceeds functional nutrient density significance. They do what they are supposed to do for your body.</p>
+            <p>ie. NO B.S. ingredients for "marketing purposes" that do nothing. Every ingredient in SAUMRS is freeze dried or low temperature dried to maintain optimal, raw, whole food nutrition.</p>
+            <p>Lab tested to meet the highest standards of quality and purity. Developed by Aerospace and Biomedical engineers; SAUMRS is the most advanced nutrition on earth.</p>
+        </div>
+        <div class="hero-image">
+            <div class="product-placeholder">PRODUCT<br>IMAGE</div>
+        </div>
+    </section>
+
+    <section class="press-section">
+        <div class="press-logo">Bloomberg</div>
+        <div class="press-logo">Yahoo! News</div>
+        <div class="press-logo">Exeleon</div>
+        <div class="press-logo">Medium</div>
+        <div class="press-logo">Fast Company</div>
+    </section>
+
+    <section class="superfoods">
+        <div class="athlete-image scroll-animate">
+            <div class="athlete-placeholder">ATHLETE<br>IMAGE</div>
+        </div>
+        <div class="superfoods-content scroll-animate">
+            <h2>Superfoods make Superhumans</h2>
+            <div class="icons-grid">
+                <div class="icon-item scroll-animate">
+                    <div class="icon-circle">🚫</div>
+                    <h3>Non GMO</h3>
+                    <p>Natural, wholesome, & free from genetic modification.</p>
+                </div>
+                <div class="icon-item scroll-animate">
+                    <div class="icon-circle">🌱</div>
+                    <h3>Organic</h3>
+                    <p>Pure, nature's best for your health and well-being.</p>
+                </div>
+                <div class="icon-item scroll-animate">
+                    <div class="icon-circle">🥬</div>
+                    <h3>Vegan</h3>
+                    <p>Plant-powered nutrition for a compassionate lifestyle.</p>
+                </div>
+                <div class="icon-item scroll-animate">
+                    <div class="icon-circle">🌾</div>
+                    <h3>Gluten Free</h3>
+                    <p>Delight in gluten-free goodness, and worry-free meals.</p>
+                </div>
+                <div class="icon-item scroll-animate">
+                    <div class="icon-circle">🧪</div>
+                    <h3>Chemical Free</h3>
+                    <p>Embrace purity, free from harmful substances.</p>
+                </div>
+                <div class="icon-item scroll-animate">
+                    <div class="icon-circle">✡️</div>
+                    <h3>Kosher</h3>
+                    <p>Faithfully prepared, meeting rigorous standards.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ingredients-section">
+        <a href="#ingredients" class="btn-primary">🔬 Ingredients</a>
+    </section>
+
+    <section class="subscribe-section">
+        <h2>Subscribe Now</h2>
+        <p><strong>WELCOME TO THE SAUMRS FAMILY! =)</strong></p>
+        <p>SAUMRS is bespoke just for you. The nutrition needs for a 5'7" 115lb female are dramatically different than a 6' 200lb male. In order for you to experience optimal results we need to tailor your subscription JUST FOR YOU! Every subscription comes with a <strong>FREE 15-30 MINUTE HEALTH EVALUATION</strong> with a diet/lifestyle/wellness master.</p>
+        <p><strong>For Booking Please Give Us a Call or Send Us an Email:</strong></p>
+        <div class="subscribe-options">
+            <div class="subscribe-card scroll-animate">
+                <h3>Phone:</h3>
+                <p>+1 (877) 4-SAUMRS</p>
+                <a href="tel:+18774728677" class="btn-primary">📞 PHONE US</a>
+            </div>
+            <div class="subscribe-card scroll-animate">
+                <h3>Email:</h3>
+                <p>Booking@SAUMRS.COM</p>
+                <a href="mailto:Booking@SAUMRS.COM" class="btn-primary">✉️ EMAIL US</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="super-nutrition">
+        <h2>Super Nutrition</h2>
+        <div class="nutrition-top-row">
+            <div class="nutrition-item scroll-animate">
+                <div class="nutrition-icon">💪</div>
+                <h3>Anabolic Nutrition</h3>
+                <p>SAUMRS promotes healthy cellular mitosis and detoxing of senescent cells.</p>
+            </div>
+            <div class="nutrition-item scroll-animate">
+                <div class="nutrition-icon">🧬</div>
+                <h3>34 Ingredients</h3>
+                <p>Experience the power of nature with our custom curated blend.</p>
+            </div>
+        </div>
+        
+        <div class="nutrition-middle">
+            <div class="nutrition-circle"></div>
+            <div class="center-product-wrapper scroll-animate">
+                <div class="product-placeholder">S.A.U.M.R.S</div>
+            </div>
+            <div class="nutrition-item-positioned left-top scroll-animate">
+                <div class="nutrition-icon">⏳</div>
+                <h3>Life Extension</h3>
+                <p>Mitigate aging with the unique adaptogen superfood formula.</p>
+            </div>
+            <div class="nutrition-item-positioned left-bottom scroll-animate">
+                <div class="nutrition-icon">⚡</div>
+                <h3>Increased Energy</h3>
+                <p>Elevate your endurance with our energy-boosting formula.</p>
+            </div>
+            <div class="nutrition-item-positioned right-top scroll-animate">
+                <div class="nutrition-icon">🧘</div>
+                <h3>Extended Focus</h3>
+                <p>Sustain mental clarity and concentration for longer.</p>
+            </div>
+            <div class="nutrition-item-positioned right-bottom scroll-animate">
+                <div class="nutrition-icon">💆</div>
+                <h3>Beautiful Hair, Skin, Nails</h3>
+                <p>Foundational Beauty starts with foundational nutrition</p>
+            </div>
+        </div>
+
+        <div class="nutrition-bottom-row">
+            <div class="nutrition-item scroll-animate">
+                <div class="nutrition-icon">🧠</div>
+                <h3>Improved Cognition</h3>
+                <p>Unlock your cognitive potential and enhance mental performance.</p>
+            </div>
+            <div class="nutrition-item scroll-animate">
+                <div class="nutrition-icon">🏃</div>
+                <h3>Faster Recovery</h3>
+                <p>Enhance healing and bounce back faster than ever.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <h2>Join the Family</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card scroll-animate">
+                <div class="testimonial-avatar"></div>
+                <p class="testimonial-text">Amazing. This boosted my energy levels! Highly recommend this shake.</p>
+                <div class="testimonial-stars">★★★★★</div>
+                <p>Regina</p>
+            </div>
+            <div class="testimonial-card scroll-animate">
+                <div class="testimonial-avatar"></div>
+                <p class="testimonial-text">Life-changing product! I Feel better since starting this shake.</p>
+                <div class="testimonial-stars">★★★★★</div>
+                <p>Samir</p>
+            </div>
+            <div class="testimonial-card scroll-animate">
+                <div class="testimonial-avatar"></div>
+                <p class="testimonial-text">Improved focus, balanced hormones, and delicious taste. Love it</p>
+                <div class="testimonial-stars">★★★★★</div>
+                <p>Shelly</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing-section">
+        <div><div class="product-placeholder" style="max-width:400px">PRODUCT<br>PACKAGES</div></div>
+        <div class="pricing-content">
+            <h2>Join the SAUMRS Family for as Little as $5.55 per Day!</h2>
+            <p><strong>Less than the price of a craft coffee!</strong></p>
+            <p>Unlock incredible savings with our bi-annual and annual supply bundles. Subscribe today and enjoy amazing pricing.</p>
+            <a href="#subscriptions" class="btn-primary">🔒 SUBSCRIBE</a>
+        </div>
+    </section>
+
+    <div class="two-column-section">
+        <div class="column-image">Executives and Athletes Image</div>
+        <div class="column-content">
+            <h2>Executives and Athletes</h2>
+            <p><strong>We made this for you!</strong></p>
+            <p>Discover our groundbreaking health products crafted with a perfect blend of innovative thinking and scientific expertise.</p>
+        </div>
+    </div>
+
+    <div class="two-column-section">
+        <div class="column-content">
+            <h2>Innovative Health Products</h2>
+            <p><strong>Research & Development</strong></p>
+        </div>
+        <div class="column-image">Research & Development Image</div>
+    </div>
+
+    <section class="faq-section">
+        <div><div class="product-placeholder" style="max-width:380px">PRODUCT<br>IMAGE</div></div>
+        <div class="faq-list">
+            <h2>FAQ's</h2>
+            <p class="faq-intro">Here are some of the most common questions we get.</p>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    What is in SAUMRS? <span class="faq-arrow">›</span>
+                </div>
+                <div class="faq-answer">
+                    Organic Coconut Milk, Organic Banana, Organic Papaya Juice, Organic Pineapple Juice, Organic Cashew Nut Milk, Organic Acai, Organic Maltodextrin, Organic Apple, Organic Cacao, Organic Tart Cherry Juice, Organic Cordyceps Mushroom Extract, Organic Sea Buckthorn Juice, Organic Lion's Mane Extract, Organic Tomato, Organic Rice, Organic Goji Berry Juice, Organic Kale, Organic Broccoli, Organic Spirulina, Organic Unripe Acerola Cherry, Organic Chlorella, Organic Beetroot Juice, Organic Ginger, Organic Mangosteen, Organic Cranberry Juice, Organic Noni Fruit, Organic Alfalfa Grass Juice, Organic Pomegranate Juice, Organic Amla, Organic Moringa Leaf, Organic Baobab Fruit, Organic Shiitake Mushroom, Organic Cinnamon, Organic Kelp, Organic Sunflower Lecithin, Organic Acacia, Silicon Dioxide
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    How is SAUMRS different? <span class="faq-arrow">›</span>
+                </div>
+                <div class="faq-answer">
+                    There is no other meal available on Earth to obtain all of the benefits of SAUMRS. Each ingredient has been selected for optimal nutrition and potency while keeping flavor profile and nutrition in mind. The 16 fruits, 6 vegetables/leaf/grass, 3 algae/seaweeds, 3 mushrooms, 3 herb/roots and 2 nuts provide antioxidants, vitamins, minerals, amino acids, and many other nutritional benefits.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Is SAUMRS safe and sustainable? <span class="faq-arrow">›</span>
+                </div>
+                <div class="faq-answer">
+                    Each ingredient is chemical and pesticide free. SAUMRS ingredients are sustainably sourced using and dried using low temperature to maintain RAW food quality or freeze dried to maintain optimal nutrition. Multiple assessments are used to meet high standards of quality and freshness including Current Good Manufacturing Practices, Hazard Analysis, Critical Control Points, and Organoleptic Testing.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Is SAUMRS good for fat loss? <span class="faq-arrow">›</span>
+                </div>
+                <div class="faq-answer">
+                    The fat quality is ideal for a "low fat" meal. The carb: protein ratio (with recommended additional protein) is ideal for muscle gain, "pre" and post-workout.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    How is SAUMRS a beauty product? <span class="faq-arrow">›</span>
+                </div>
+                <div class="faq-answer">
+                    Beauty starts from the inside out. Collagen protein is the foundation of hair, skin and nails. Vitamin C is the catalyst for growing hair, skin and nails. Addressing this topically is the insane capitalist model of the beauty industry. SAUMRS improves beauty from the inside out.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    How will I poop? <span class="faq-arrow">›</span>
+                </div>
+                <div class="faq-answer">
+                    As this is a liquid meal it inherently promotes soft poop. If you have constipation it can be a cure. Everyone will react differently. There is a detox period when initially taking SAUMRS. SAUMRS by itself creates runny poop. The wrong protein profile will create runny poop. With the proper protein profile such as pea and rice this will be mitigated. SAUMRS should be mild on your stomach with no negative effects.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    How does SAUMRS taste? <span class="faq-arrow">›</span>
+                </div>
+                <div class="faq-answer">
+                    As SAUMRS is 100% organic there will be slight variances in flavor given the ingredient profile. At its' peak, we like to call it tropical ginger bread. At its' worst, it has a very green flavor. Sometimes it tastes more chocolatey. The thicker it is the sweeter. If you add more water it has a more green (kale and seaweed) flavor.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="footer-social-bar">
+        <h3>Let's get Social</h3>
+        <div class="social-links">
+            <a href="#">f</a>
+            <a href="#">𝕏</a>
+            <a href="#">▶</a>
+            <a href="#">📷</a>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-column">
+                <h4>HELP</h4>
+                <a href="mailto:Support@SAUMRS.com">Support@SAUMRS.com</a>
+            </div>
+            <div class="footer-column">
+                <h4>CONTACT</h4>
+                <a href="tel:+18774728677">1 (877) 4-SAUMRS</a>
+            </div>
+            <div class="footer-column">
+                <h4>ADDRESS</h4>
+                <p>1000 Brickell Ave<br>Ste 715<br>Miami, FL 33131</p>
+            </div>
+            <div class="footer-column">
+                <h4>RELEASES</h4>
+                <a href="mailto:Press@SAUMRS.com">Press@SAUMRS.com</a>
+            </div>
+            <div class="footer-column">
+                <h4>AFFILIATES</h4>
+                <a href="mailto:Affiliates@SAUMRS.com">Affiliates@SAUMRS.com</a>
+            </div>
+            <div class="footer-column">
+                <h4>LEGAL</h4>
+                <a href="mailto:Legal@SAUMRS.com">Legal@SAUMRS.com</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="footer-bottom">
+        <div class="footer-links">
+            <a href="#">Cookie Policy</a> • 
+            <a href="#">Privacy</a> • 
+            <a href="#">Terms of use</a>
+        </div>
+        <p>© 2023 SAUMRS ™</p>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('sidebarMenu').classList.toggle('active');
+            document.getElementById('menuOverlay').classList.toggle('active');
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('animate');
+                    }, index * 100);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -80px 0px' });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const animateElements = document.querySelectorAll('.scroll-animate, .icon-item, .nutrition-item, .nutrition-item-positioned, .testimonial-card, .subscribe-card, .athlete-image, .superfoods-content, .center-product-wrapper');
+            animateElements.forEach(el => observer.observe(el));
+        });
+
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrolled = window.pageYOffset;
+                    const parallaxElements = document.querySelectorAll('.product-placeholder, .athlete-placeholder');
+                    
+                    parallaxElements.forEach(el => {
+                        const rect = el.getBoundingClientRect();
+                        const scrollPercent = (window.innerHeight - rect.top) / window.innerHeight;
+                        if (scrollPercent > 0 && scrollPercent < 1) {
+                            const yPos = scrollPercent * 15 - 7.5;
+                            el.style.transform = `translateY(${yPos}px)`;
+                        }
+                    });
+
+                    const circle = document.querySelector('.nutrition-circle');
+                    if (circle) {
+                        const rotation = scrolled * 0.03;
+                        circle.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+                    }
+                    
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        document.querySelectorAll('.faq-item').forEach(item => {
+            const question = item.querySelector('.faq-question');
+            const answer = item.querySelector('.faq-answer');
+            const arrow = item.querySelector('.faq-arrow');
+            
+            question.addEventListener('click', function() {
+                const isActive = answer.classList.contains('active');
+                
+                // Close all FAQ items
+                document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('active'));
+                document.querySelectorAll('.faq-arrow').forEach(ar => ar.classList.remove('active'));
+                
+                // Toggle current item
+                if (!isActive) {
+                    answer.classList.add('active');
+                    arrow.classList.add('active');
+                }
+            });
+        });
+
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px) scale(1.02)';
+            });
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

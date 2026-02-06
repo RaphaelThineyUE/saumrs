@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - S.A.U.M.R.S</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'American Typewriter', 'Courier Prime', monospace; color: #1a1a1a; line-height: 1.6; background: #f5f5f5; }
+        
+        header { 
+            background: #000; 
+            color: #fff; 
+            padding: 1rem 2.5rem; 
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 1000; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .menu-toggle { 
+            background: none; 
+            border: none; 
+            color: #fff; 
+            cursor: pointer; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 4px; 
+            width: 22px; 
+        }
+        .menu-toggle span { 
+            display: block; 
+            height: 2px; 
+            background: #fff; 
+            width: 100%; 
+        }
+        .logo { 
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.3rem; 
+            letter-spacing: 6px; 
+        }
+        .logo a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .cart-icon {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            position: relative;
+            transition: opacity 0.3s;
+        }
+        .cart-icon:hover {
+            opacity: 0.7;
+        }
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #fff;
+            color: #000;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        .sidebar-menu { 
+            position: fixed; 
+            top: 0; 
+            left: -370px; 
+            width: 370px; 
+            height: 100vh; 
+            background: #000; 
+            z-index: 9999; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            padding-left: 3rem; 
+            transition: left 0.3s; 
+        }
+        .sidebar-menu.active { left: 0; }
+        .sidebar-menu a { 
+            color: #fff; 
+            text-decoration: none; 
+            font-size: 1.4rem; 
+            margin: 1.3rem 0; 
+            transition: opacity 0.3s; 
+        }
+        .sidebar-menu a:hover { opacity: 0.6; }
+        .menu-overlay { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.5); 
+            z-index: 9998; 
+            display: none; 
+        }
+        .menu-overlay.active { display: block; }
+        
+        .page-title { 
+            background: #fff; 
+            padding: 6rem 5rem 3rem; 
+            margin-top: 53px; 
+            text-align: center; 
+            opacity: 0; 
+            transform: translateY(30px); 
+            transition: all 0.8s ease; 
+        }
+        .page-title.animate { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+        .page-title h1 { 
+            font-size: 2.5rem; 
+            font-weight: 400; 
+            letter-spacing: 2px; 
+        }
+        
+        .contact-section { 
+            background: #fff; 
+            padding: 4rem 5rem; 
+            display: grid; 
+            grid-template-columns: 1fr 2fr 1fr; 
+            gap: 4rem; 
+            align-items: start; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+        }
+        
+        .contact-info { 
+            opacity: 0; 
+            transform: translateX(-30px); 
+            transition: all 0.8s ease; 
+        }
+        .contact-info.animate { 
+            opacity: 1; 
+            transform: translateX(0); 
+        }
+        .info-item { margin-bottom: 2rem; }
+        .info-item h3 { 
+            font-size: 0.9rem; 
+            margin-bottom: 0.5rem; 
+        }
+        .info-item p { font-size: 0.85rem; }
+        .info-item a { 
+            color: #000; 
+            text-decoration: none; 
+        }
+        
+        .contact-form { 
+            opacity: 0; 
+            transform: translateY(30px); 
+            transition: all 0.8s ease; 
+        }
+        .contact-form.animate { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group input,
+        .form-group textarea { 
+            width: 100%; 
+            padding: 1rem; 
+            border: 1px solid #ddd; 
+            font-family: 'Courier Prime', monospace; 
+            font-size: 0.9rem; 
+        }
+        .form-group textarea { 
+            min-height: 150px; 
+            resize: vertical; 
+        }
+        .submit-btn { 
+            width: 100%; 
+            padding: 1rem; 
+            background: #000; 
+            color: #fff; 
+            border: none; 
+            font-family: 'Courier Prime', monospace; 
+            font-size: 0.95rem; 
+            letter-spacing: 1px; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+        }
+        .submit-btn:hover { background: #333; }
+        
+        .location-info { 
+            text-align: right; 
+            opacity: 0; 
+            transform: translateX(30px); 
+            transition: all 0.8s ease; 
+        }
+        .location-info.animate { 
+            opacity: 1; 
+            transform: translateX(0); 
+        }
+        .location-info h3 { 
+            font-size: 1rem; 
+            margin-bottom: 0.5rem; 
+        }
+        .location-info p { 
+            font-size: 0.85rem; 
+            margin-bottom: 0.3rem; 
+        }
+        .social-icons { 
+            margin-top: 2rem; 
+            display: flex; 
+            gap: 1.5rem; 
+            justify-content: flex-end; 
+        }
+        .social-icons a { 
+            color: #000; 
+            font-size: 1.2rem; 
+            text-decoration: none; 
+            transition: opacity 0.3s; 
+        }
+        .social-icons a:hover { opacity: 0.6; }
+        
+        .map-section { 
+            background: #fff; 
+            padding: 0 5rem 4rem; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            opacity: 0; 
+            transform: scale(0.95); 
+            transition: all 0.8s ease; 
+        }
+        .map-section.animate { 
+            opacity: 1; 
+            transform: scale(1); 
+        }
+        .map-container { 
+            width: 100%; 
+            height: 450px; 
+            background: #e0e0e0; 
+            border-radius: 0; 
+            overflow: hidden; 
+            border: 1px solid #ddd; 
+        }
+        .map-container iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: 0; 
+        }
+        
+        .subscribe-section { 
+            background: #d5d5d5; 
+            padding: 4rem 5rem; 
+            text-align: center; 
+        }
+        .subscribe-section h2 { 
+            font-size: 2rem; 
+            margin-bottom: 1.5rem; 
+            font-weight: 400; 
+        }
+        .subscribe-section .welcome-text { 
+            font-size: 0.95rem; 
+            margin-bottom: 1.5rem; 
+        }
+        .subscribe-section p { 
+            font-size: 0.85rem; 
+            line-height: 1.8; 
+            max-width: 1000px; 
+            margin: 0 auto 1rem; 
+        }
+        .subscribe-section .booking-text { 
+            font-size: 0.9rem; 
+            margin-top: 1.5rem; 
+            margin-bottom: 1rem; 
+        }
+        .subscribe-info { 
+            display: flex; 
+            justify-content: center; 
+            gap: 4rem; 
+            margin: 2rem 0; 
+        }
+        .info-block { text-align: center; }
+        .info-block h3 { 
+            font-size: 0.85rem; 
+            margin-bottom: 0.5rem; 
+        }
+        .info-block p { font-size: 0.9rem; }
+        .subscribe-buttons { 
+            display: flex; 
+            justify-content: center; 
+            gap: 2rem; 
+            margin-top: 2rem; 
+        }
+        .btn-subscribe { 
+            display: inline-block; 
+            padding: 1rem 2.5rem; 
+            background: #000; 
+            color: #fff; 
+            text-decoration: none; 
+            font-size: 0.9rem; 
+            letter-spacing: 1px; 
+        }
+        
+        .footer-social-bar { 
+            background: #3a3a3a; 
+            padding: 1.3rem 5rem; 
+            display: flex; 
+            gap: 2.5rem; 
+            color: #fff; 
+        }
+        .footer-bar-links { 
+            display: flex; 
+            gap: 2rem; 
+        }
+        .footer-bar-links a { 
+            color: #fff; 
+            font-size: 1.2rem; 
+            text-decoration: none; 
+        }
+        footer { 
+            background: #4a4a4a; 
+            padding: 3rem 5rem 2rem; 
+        }
+        .footer-grid { 
+            display: grid; 
+            grid-template-columns: repeat(6, 1fr); 
+            gap: 2rem; 
+            margin: 2.5rem 0; 
+            font-size: 0.85rem; 
+            max-width: 1400px; 
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+        .footer-column h4 { 
+            margin-bottom: 0.8rem; 
+            color: #fff; 
+            font-weight: 400; 
+        }
+        .footer-column a, 
+        .footer-column p { 
+            color: #ddd; 
+            text-decoration: none; 
+            display: block; 
+            margin-bottom: 0.5rem; 
+            line-height: 1.6; 
+        }
+        .footer-bottom { 
+            background: #000; 
+            color: #fff; 
+            text-align: center; 
+            padding: 1.5rem; 
+            font-size: 0.8rem; 
+        }
+        .footer-links a { 
+            color: #fff; 
+            text-decoration: none; 
+            margin: 0 0.6rem; 
+        }
+        
+        @media (max-width: 1024px) {
+            .contact-section { grid-template-columns: 1fr; }
+            .location-info { text-align: left; }
+            .social-icons { justify-content: flex-start; }
+            .footer-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button class="menu-toggle" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="logo"><a href="index.html">S.A.U.M.R.S</a></div>
+        <a href="order.html" class="cart-icon">
+            🛒
+            <span class="cart-count">0</span>
+        </a>
+    </header>
+
+    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+    <div class="sidebar-menu" id="sidebarMenu">
+        <a href="index.html">MAIN</a>
+        <a href="five-pillars.html">FIVE PILLARS</a>
+        <a href="ingredients.html">INGREDIENTS</a>
+        <a href="subscriptions.html">SUBSCRIPTIONS</a>
+        <a href="contact.html">CONTACT</a>
+    </div>
+
+    <section class="page-title scroll-animate">
+        <h1>Reach Out to Us</h1>
+    </section>
+
+    <section class="contact-section">
+        <div class="contact-info scroll-animate">
+            <div class="info-item">
+                <h3>Phone:</h3>
+                <p><a href="tel:+18774728677">+1 (877) 4-SAUMRS</a></p>
+            </div>
+            <div class="info-item">
+                <h3>Email:</h3>
+                <p><a href="mailto:Support@SAUMRS.COM">Support@SAUMRS.COM</a></p>
+            </div>
+        </div>
+
+        <div class="contact-form scroll-animate">
+            <form action="#" method="POST">
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="message" placeholder="Message" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">SEND MESSAGE</button>
+            </form>
+        </div>
+
+        <div class="location-info scroll-animate">
+            <h3>1000 Brickell Ave, Ste 715</h3>
+            <p>Miami, FL 33131</p>
+            <p><strong>MON-FRI</strong> 09:00 - 19:00</p>
+            <p><strong>SAT-SUN</strong> 10:00 - 14:00</p>
+            
+            <div class="social-icons">
+                <a href="#" aria-label="Facebook">f</a>
+                <a href="#" aria-label="Twitter">𝕏</a>
+                <a href="#" aria-label="YouTube">▶</a>
+                <a href="#" aria-label="Instagram">📷</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="map-section scroll-animate">
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3592.456789!2d-80.191788!3d25.761681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9b68a1f234567%3A0x1234567890abcdef!1s1000%20Brickell%20Ave%2C%20Miami%2C%20FL%2033131!5e0!3m2!1sen!2sus!4v1234567890" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </section>
+
+    <section class="subscribe-section">
+        <h2>Subscribe Now</h2>
+        <p class="welcome-text"><strong>WELCOME TO THE SAUMRS FAMILY! =)</strong></p>
+        <p>SAUMRS is bespoke just for you. The nutrition needs for a 5'7" 115lb female are dramatically different than a 6' 200lb male. In order for you to experience optimal results we need to tailor your subscription JUST FOR YOU! Every subscription comes with a <strong>FREE 15-30 MINUTE HEALTH EVALUATION</strong> with a diet/lifestyle/wellness master. Once performed, we can offer you the best advice on daily product dosage and the most appropriate protein(s) needed to reach your goals.</p>
+        <p class="booking-text"><strong>For Booking Please Give Us a Call or Send Us an Email with the Best Time for your Appointment:</strong></p>
+        
+        <div class="subscribe-info">
+            <div class="info-block">
+                <h3>Phone:</h3>
+                <p>+1 (877) 4-SAUMRS</p>
+            </div>
+            <div class="info-block">
+                <h3>Email:</h3>
+                <p>Booking@SAUMRS.COM</p>
+            </div>
+        </div>
+        
+        <div class="subscribe-buttons">
+            <a href="tel:+18774728677" class="btn-subscribe">📞 PHONE US</a>
+            <a href="mailto:Booking@SAUMRS.COM" class="btn-subscribe">✉️ EMAIL US</a>
+        </div>
+    </section>
+
+    <div class="footer-social-bar">
+        <h3>Let's get Social</h3>
+        <div class="footer-bar-links">
+            <a href="#" aria-label="Facebook">f</a>
+            <a href="#" aria-label="Twitter">𝕏</a>
+            <a href="#" aria-label="YouTube">▶</a>
+            <a href="#" aria-label="Instagram">📷</a>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-column">
+                <h4>HELP</h4>
+                <a href="mailto:Support@SAUMRS.com">Support@SAUMRS.com</a>
+            </div>
+            <div class="footer-column">
+                <h4>CONTACT</h4>
+                <a href="tel:+18774728677">1 (877) 4-SAUMRS</a>
+            </div>
+            <div class="footer-column">
+                <h4>ADDRESS</h4>
+                <p>1000 Brickell Ave<br>Ste 715<br>Miami, FL 33131</p>
+            </div>
+            <div class="footer-column">
+                <h4>RELEASES</h4>
+                <a href="mailto:Press@SAUMRS.com">Press@SAUMRS.com</a>
+            </div>
+            <div class="footer-column">
+                <h4>AFFILIATES</h4>
+                <a href="mailto:Affiliates@SAUMRS.com">Affiliates@SAUMRS.com</a>
+            </div>
+            <div class="footer-column">
+                <h4>LEGAL</h4>
+                <a href="mailto:Legal@SAUMRS.com">Legal@SAUMRS.com</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="footer-bottom">
+        <div class="footer-links">
+            <a href="#">Cookie Policy</a> • 
+            <a href="#">Privacy</a> • 
+            <a href="#">Terms of use</a>
+        </div>
+        <p>© 2023 SAUMRS ™</p>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('sidebarMenu').classList.toggle('active');
+            document.getElementById('menuOverlay').classList.toggle('active');
+        }
+
+        // Scroll Animation Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('animate');
+                    }, index * 100);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -80px 0px' });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const animateElements = document.querySelectorAll('.scroll-animate, .page-title, .contact-info, .contact-form, .location-info, .map-section');
+            animateElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>

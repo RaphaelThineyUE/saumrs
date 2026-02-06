@@ -1,0 +1,62 @@
+{
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "results": [
+    {
+      "name": "home",
+      "newUrl": "http://localhost:5173/",
+      "oldUrl": "http://localhost:4175/saumrsmainpagev3.html",
+      "diffPixels": 1007411,
+      "diffPath": "/workspaces/saumrs/playwright-report/visual-diffs/home.diff.png",
+      "width": 1920,
+      "height": 6873
+    },
+    {
+      "name": "contact",
+      "newUrl": "http://localhost:5173/contact",
+      "oldUrl": "http://localhost:4175/contact-updated.html",
+      "diffPixels": 3290895,
+      "diffPath": "/workspaces/saumrs/playwright-report/visual-diffs/contact.diff.png",
+      "width": 1920,
+      "height": 2306
+    },
+    {
+      "name": "order",
+      "newUrl": "http://localhost:5173/order",
+      "oldUrl": "http://localhost:4175/order-page.html",
+      "diffPixels": 1352535,
+      "diffPath": "/workspaces/saumrs/playwright-report/visual-diffs/order.diff.png",
+      "width": 1920,
+      "height": 2534
+    },
+    {
+      "name": "five-pillars",
+      "newUrl": "http://localhost:5173/five-pillars",
+      "oldUrl": "http://localhost:4175/five-pillars-page.html",
+      "diffPixels": 7425146,
+      "diffPath": "/workspaces/saumrs/playwright-report/visual-diffs/five-pillars.diff.png",
+      "width": 1920,
+      "height": 4606
+    },
+    {
+      "name": "ingredients",
+      "newUrl": "http://localhost:5173/ingredients",
+      "oldUrl": "http://localhost:4175/ingredients-page.html",
+      "diffPixels": 7863773,
+      "diffPath": "/workspaces/saumrs/playwright-report/visual-diffs/ingredients.diff.png",
+      "width": 1920,
+      "height": 5107
+    },
+    {
+      "name": "subscriptions",
+      "newUrl": "http://localhost:5173/subscriptions",
+      "oldUrl": "http://localhost:4175/subscriptions-styled.html",
+      "diffPixels": 3463921,
+      "diffPath": "/workspaces/saumrs/playwright-report/visual-diffs/subscriptions.diff.png",
+      "width": 1920,
+      "height": 3531
+    }
+  ]
+}

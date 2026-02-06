@@ -1,0 +1,29 @@
+{
+  "name": "saumrs-app",
+  "version": "1.0.0",
+  "description": "S.A.U.M.R.S - Superfoods make Superhumans",
+  "private": true,
+  "scripts": {
+    "dev": "docker-compose up",
+    "dev:build": "docker-compose up --build",
+    "build": "docker-compose build",
+    "down": "docker-compose down",
+    "logs": "docker-compose logs -f",
+    "logs:backend": "docker-compose logs -f backend",
+    "logs:frontend": "docker-compose logs -f frontend",
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "backend:build": "cd backend && npm run build",
+    "frontend:build": "cd frontend && npm run build",
+    "setup": "bash setup.sh",
+    "visual:compare": "node scripts/visual-compare.cjs"
+  },
+  "keywords": ["saumrs", "superfoods", "nutrition", "react", "express"],
+  "author": "SAUMRS",
+  "license": "Copyright",
+  "devDependencies": {
+    "pixelmatch": "^5.3.0",
+    "playwright": "^1.41.2",
+    "pngjs": "^7.0.0"
+  }
+}

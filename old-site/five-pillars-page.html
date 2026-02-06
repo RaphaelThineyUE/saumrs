@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Five Pillars - S.A.U.M.R.S</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'American Typewriter', monospace; color: #1a1a1a; line-height: 1.6; }
+        
+        header { background: #000; color: #fff; padding: 1rem 2.5rem; position: fixed; top: 0; width: 100%; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+        .logo { font-size: 1.3rem; letter-spacing: 6px; }
+        .menu-toggle { position: absolute; left: 2.5rem; }
+        .menu-toggle { background: none; border: none; color: #fff; cursor: pointer; display: flex; flex-direction: column; gap: 4px; width: 22px; }
+        .menu-toggle span { display: block; height: 2px; background: #fff; width: 100%; }
+        .sidebar-menu { position: fixed; top: 0; left: -370px; width: 370px; height: 100vh; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; padding-left: 3rem; transition: left 0.3s; }
+        .sidebar-menu.active { left: 0; }
+        .sidebar-menu a { color: #fff; text-decoration: none; font-size: 1.4rem; margin: 1.3rem 0; transition: opacity 0.3s; }
+        .sidebar-menu a:hover { opacity: 0.6; }
+        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9998; display: none; }
+        .menu-overlay.active { display: block; }
+        
+        .hero-banner { background: #f5f5f5; padding: 8rem 5rem 4rem; margin-top: 53px; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .hero-content h1 { font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.8; }
+        .hero-content .watch-video { display: inline-block; padding: 0.8rem 2rem; background: #000; color: #fff; text-decoration: none; margin-top: 1rem; }
+        .hero-image { display: flex; justify-content: center; }
+        .video-placeholder { width: 100%; max-width: 300px; aspect-ratio: 4/3; background: linear-gradient(135deg, #e0e0e0, #f5f5f5); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999; font-size: 3rem; }
+        
+        .research-section { background: #fff; padding: 4rem 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .research-image img { width: 100%; max-width: 500px; }
+        .research-content h2 { font-size: 1.5rem; margin-bottom: 1rem; }
+        .research-content p { font-size: 0.95rem; line-height: 1.8; margin-bottom: 1rem; }
+        
+        .press-bar { background: #3a3a3a; padding: 1.5rem 5rem; min-height: 60px; display: flex; justify-content: space-around; align-items: center; }
+        .press-bar span { color: #999; font-size: 1rem; font-weight: bold; opacity: 0; }
+        /* Space for future press logos or text */
+        
+        .pillars-section { background: #f5f5f5; padding: 4rem 5rem; }
+        .pillars-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3rem; margin-bottom: 4rem; }
+        .pillar-icon { display: flex; flex-direction: column; align-items: center; text-align: center; opacity: 0; transform: scale(0.9); transition: all 0.6s ease; }
+        .pillar-icon.animate { opacity: 1; transform: scale(1); }
+        .pillar-icon div { width: 80px; height: 80px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin-bottom: 1rem; }
+        
+        .pillar-detail { background: #fff; padding: 3rem; margin-bottom: 2rem; border-radius: 8px; display: grid; grid-template-columns: 120px 1fr; gap: 2rem; align-items: start; opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .pillar-detail.animate { opacity: 1; transform: translateY(0); }
+        .pillar-detail:nth-child(even) { background: #f9f9f9; }
+        .pillar-detail-icon { width: 100px; height: 100px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+        .pillar-detail h3 { font-size: 1.2rem; margin-bottom: 1rem; }
+        .pillar-detail p { font-size: 0.9rem; line-height: 1.8; color: #555; }
+        
+        .subscribe-section { background: #d5d5d5; padding: 4rem 5rem; text-align: center; }
+        .subscribe-section h2 { font-size: 2rem; margin-bottom: 2rem; }
+        .subscribe-buttons { display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; }
+        .btn-subscribe { display: inline-block; padding: 1rem 2.5rem; background: #000; color: #fff; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px; }
+        
+        .footer-social-bar { background: #3a3a3a; padding: 1.3rem 5rem; display: flex; gap: 2.5rem; color: #fff; }
+        .social-links { display: flex; gap: 2rem; }
+        .social-links a { color: #fff; font-size: 1.2rem; text-decoration: none; }
+        footer { background: #fff; padding: 3rem 5rem 2rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2rem; margin: 2.5rem 0; font-size: 0.85rem; }
+        .footer-column h4 { margin-bottom: 0.8rem; }
+        .footer-column a, .footer-column p { color: #000; text-decoration: none; display: block; margin-bottom: 0.5rem; }
+        .footer-bottom { background: #000; color: #fff; text-align: center; padding: 1.5rem; font-size: 0.8rem; }
+        .footer-links a { color: #fff; text-decoration: none; margin: 0 0.6rem; }
+        
+        @media (max-width: 1024px) {
+            .hero-banner, .research-section { grid-template-columns: 1fr; }
+            .pillars-grid { grid-template-columns: repeat(3, 1fr); }
+            .pillar-detail { grid-template-columns: 1fr; text-align: center; }
+            .footer-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button class="menu-toggle" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="logo">S.A.U.M.R.S</div>
+    </header>
+
+    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+    <div class="sidebar-menu" id="sidebarMenu">
+        <a href="index.html">MAIN</a>
+        <a href="five-pillars.html">FIVE PILLARS</a>
+        <a href="ingredients.html">INGREDIENTS</a>
+        <a href="subscriptions.html">SUBSCRIPTIONS</a>
+        <a href="contact.html">CONTACT</a>
+    </div>
+
+    <section class="hero-banner">
+        <div class="hero-content">
+            <h1>Super. Awesome. Ultimate. Meal. Replacement. Shakes.</h1>
+            <p><strong>From Breakfast to Snacks!</strong> Our Wellness Belief Systems:</p>
+            <a href="#" class="watch-video">▶ Watch Video</a>
+        </div>
+        <div class="hero-image">
+            <div class="video-placeholder">▶</div>
+        </div>
+    </section>
+
+    <section class="research-section">
+        <div class="research-image">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23e0e0e0' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-size='20' fill='%23999'%3ELab Equipment%3C/text%3E%3C/svg%3E" alt="Research Lab">
+        </div>
+        <div class="research-content">
+            <h2>Developed With Cutting Edge Research In Mind</h2>
+            <p>Our team of expert researchers and scientists work tirelessly to ensure every ingredient in SAUMRS is backed by cutting-edge nutritional science and delivers maximum benefit to your body.</p>
+        </div>
+    </section>
+
+    <div class="press-bar">
+        <!-- Empty space for future press logos/text - can add content here later -->
+    </div>
+
+    <section class="pillars-section">
+        <div class="pillars-grid">
+            <div class="pillar-icon scroll-animate">
+                <div>🏋️</div>
+            </div>
+            <div class="pillar-icon scroll-animate">
+                <div>🧪</div>
+            </div>
+            <div class="pillar-icon scroll-animate">
+                <div>🧬</div>
+            </div>
+            <div class="pillar-icon scroll-animate">
+                <div>🏃</div>
+            </div>
+            <div class="pillar-icon scroll-animate">
+                <div>🌿</div>
+            </div>
+        </div>
+
+        <div class="pillar-detail scroll-animate">
+            <div class="pillar-detail-icon">🏋️</div>
+            <div>
+                <h3>Pillar 1: Physical Excellence</h3>
+                <p>Welcome to our comprehensive collection of thoughtfully crafted, where we put our utmost into the transformative power of Lifestyle Medicine. Underneath luxury, as the Five Pillars, Thoughtfully measured out by the science of Spiritual Biochemistry, this movement is so deeply woven into our fabric. Therefore it has a name we call this, now call it, full life. No, man can now have a greater level of self and all of mind, and when it will be so, this to the process of life will still continue. Likewise what's...no</p>
+            </div>
+        </div>
+
+        <div class="pillar-detail scroll-animate">
+            <div class="pillar-detail-icon">🧪</div>
+            <div>
+                <h3>Pillar 2: Nutritional Science</h3>
+                <p>Welcome to our comprehensive collection of thoughtfully crafted, where we put our utmost into the transformative power of Lifestyle Medicine. Underneath luxury, as the Five Pillars, Thoughtfully measured out by the science of Spiritual Biochemistry, this movement is so deeply woven into our fabric. Therefore it has a name we call this, now call it, full life. No, man can now have a greater level of self and all of mind, and when it will be so, this to the process of life will still continue. Likewise what's...no</p>
+            </div>
+        </div>
+
+        <div class="pillar-detail scroll-animate">
+            <div class="pillar-detail-icon">🧬</div>
+            <div>
+                <h3>Pillar 3: Genetic Optimization</h3>
+                <p>Welcome to our comprehensive collection of thoughtfully crafted, where we put our utmost into the transformative power of Lifestyle Medicine. Underneath luxury, as the Five Pillars, Thoughtfully measured out by the science of Spiritual Biochemistry, this movement is so deeply woven into our fabric. Therefore it has a name we call this, now call it, full life. No, man can now have a greater level of self and all of mind, and when it will be so, this to the process of life will still continue. Likewise what's...no</p>
+            </div>
+        </div>
+
+        <div class="pillar-detail scroll-animate">
+            <div class="pillar-detail-icon">🏃</div>
+            <div>
+                <h3>Pillar 4: Movement & Recovery</h3>
+                <p>Welcome to our comprehensive collection of thoughtfully crafted, where we put our utmost into the transformative power of Lifestyle Medicine. Underneath luxury, as the Five Pillars, Thoughtfully measured out by the science of Spiritual Biochemistry, this movement is so deeply woven into our fabric. Therefore it has a name we call this, now call it, full life. No, man can now have a greater level of self and all of mind, and when it will be so, this to the process of life will still continue. Likewise what's...no</p>
+            </div>
+        </div>
+
+        <div class="pillar-detail scroll-animate">
+            <div class="pillar-detail-icon">🌿</div>
+            <div>
+                <h3>Pillar 5: Natural Wellness</h3>
+                <p>Welcome to our comprehensive collection of thoughtfully crafted, where we put our utmost into the transformative power of Lifestyle Medicine. Underneath luxury, as the Five Pillars, Thoughtfully measured out by the science of Spiritual Biochemistry, this movement is so deeply woven into our fabric. Therefore it has a name we call this, now call it, full life. No, man can now have a greater level of self and all of mind, and when it will be so, this to the process of life will still continue. Likewise what's...no</p>
+            </div>
+        </div>
+
+        <div class="pillar-detail scroll-animate">
+            <div class="pillar-detail-icon">🏋️</div>
+            <div>
+                <h3>Additional Wellness Principle</h3>
+                <p>Welcome to our comprehensive collection of thoughtfully crafted, where we put our utmost into the transformative power of Lifestyle Medicine. Underneath luxury, as the Five Pillars, Thoughtfully measured out by the science of Spiritual Biochemistry, this movement is so deeply woven into our fabric. Therefore it has a name we call this, now call it, full life. No, man can now have a greater level of self and all of mind, and when it will be so, this to the process of life will still continue. Likewise what's...no</p>
+            </div>
+        </div>
+
+        <div class="pillar-detail scroll-animate">
+            <div class="pillar-detail-icon">🧪</div>
+            <div>
+                <h3>Research Foundation</h3>
+                <p>Welcome to our comprehensive collection of thoughtfully crafted, where we put our utmost into the transformative power of Lifestyle Medicine. Underneath luxury, as the Five Pillars, Thoughtfully measured out by the science of Spiritual Biochemistry, this movement is so deeply woven into our fabric. Therefore it has a name we call this, now call it, full life. No, man can now have a greater level of self and all of mind, and when it will be so, this to the process of life will still continue. Likewise what's...no</p>
+            </div>
+        </div>
+
+        <div class="pillar-detail scroll-animate">
+            <div class="pillar-detail-icon">🧬</div>
+            <div>
+                <h3>Biochemical Balance</h3>
+                <p>Welcome to our comprehensive collection of thoughtfully crafted, where we put our utmost into the transformative power of Lifestyle Medicine. Underneath luxury, as the Five Pillars, Thoughtfully measured out by the science of Spiritual Biochemistry, this movement is so deeply woven into our fabric. Therefore it has a name we call this, now call it, full life. No, man can now have a greater level of self and all of mind, and when it will be so, this to the process of life will still continue. Likewise what's...no</p>
+            </div>
+        </div>
+
+        <div class="pillar-detail scroll-animate">
+            <div class="pillar-detail-icon">🏃</div>
+            <div>
+                <h3>Performance Enhancement</h3>
+                <p>Welcome to our comprehensive collection of thoughtfully crafted, where we put our utmost into the transformative power of Lifestyle Medicine. Underneath luxury, as the Five Pillars, Thoughtfully measured out by the science of Spiritual Biochemistry, this movement is so deeply woven into our fabric. Therefore it has a name we call this, now call it, full life. No, man can now have a greater level of self and all of mind, and when it will be so, this to the process of life will still continue. Likewise what's...no</p>
+            </div>
+        </div>
+
+        <div class="pillar-detail scroll-animate">
+            <div class="pillar-detail-icon">🌿</div>
+            <div>
+                <h3>Holistic Integration</h3>
+                <p>Welcome to our comprehensive collection of thoughtfully crafted, where we put our utmost into the transformative power of Lifestyle Medicine. Underneath luxury, as the Five Pillars, Thoughtfully measured out by the science of Spiritual Biochemistry, this movement is so deeply woven into our fabric. Therefore it has a name we call this, now call it, full life. No, man can now have a greater level of self and all of mind, and when it will be so, this to the process of life will still continue. Likewise what's...no</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="subscribe-section">
+        <h2>Subscribe Now</h2>
+        <p>Join the SAUMRS family today and experience the difference.</p>
+        <div class="subscribe-buttons">
+            <a href="tel:+18774728677" class="btn-subscribe">📞 PHONE US</a>
+            <a href="mailto:Booking@SAUMRS.COM" class="btn-subscribe">✉️ EMAIL US</a>
+        </div>
+    </section>
+
+    <div class="footer-social-bar">
+        <h3>Let's get Social</h3>
+        <div class="social-links">
+            <a href="#">f</a>
+            <a href="#">𝕏</a>
+            <a href="#">▶</a>
+            <a href="#">📷</a>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-column">
+                <h4>HELP</h4>
+                <a href="mailto:Support@SAUMRS.com">Support@SAUMRS.com</a>
+            </div>
+            <div class="footer-column">
+                <h4>CONTACT</h4>
+                <a href="tel:+18774728677">1 (877) 4-SAUMRS</a>
+            </div>
+            <div class="footer-column">
+                <h4>ADDRESS</h4>
+                <p>1000 Brickell Ave<br>Ste 715<br>Miami, FL 33131</p>
+            </div>
+            <div class="footer-column">
+                <h4>RELEASES</h4>
+                <a href="mailto:Press@SAUMRS.com">Press@SAUMRS.com</a>
+            </div>
+            <div class="footer-column">
+                <h4>AFFILIATES</h4>
+                <a href="mailto:Affiliates@SAUMRS.com">Affiliates@SAUMRS.com</a>
+            </div>
+            <div class="footer-column">
+                <h4>LEGAL</h4>
+                <a href="mailto:Legal@SAUMRS.com">Legal@SAUMRS.com</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="footer-bottom">
+        <div class="footer-links">
+            <a href="#">Cookie Policy</a> • 
+            <a href="#">Privacy</a> • 
+            <a href="#">Terms of use</a>
+        </div>
+        <p>© 2023 SAUMRS ™</p>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('sidebarMenu').classList.toggle('active');
+            document.getElementById('menuOverlay').classList.toggle('active');
+        }
+
+        // Scroll Animation Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('animate');
+                    }, index * 100);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -80px 0px' });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const animateElements = document.querySelectorAll('.pillar-icon, .pillar-detail');
+            animateElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
