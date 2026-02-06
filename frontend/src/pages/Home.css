@@ -71,27 +71,49 @@
   font-weight: 400;
 }
 
+img.product-placeholder {
+  background: transparent;
+  object-fit: contain;
+  padding: 0;
+}
+
 .athlete-placeholder {
   background: linear-gradient(135deg, #e8e8e8, #d0d0d0);
   color: #666;
   max-width: 500px;
 }
 
-.press-section {
-  background: #3a3a3a;
-  padding: 2rem 5rem;
-  display: flex;
-  justify-content: center;
-  gap: 4rem;
-  flex-wrap: wrap;
+img.athlete-placeholder {
+  background: transparent;
+  object-fit: cover;
+  padding: 0;
+  max-width: 500px;
+  width: 100%;
+  height: auto;
 }
 
-.press-logo {
-  color: #999;
-  font-size: 1.1rem;
-  font-weight: bold;
+.press-section {
+  background: #3a3a3a;
+  padding: 2rem 0;
+  overflow: hidden;
+}
+
+.press-marquee {
+  padding: 0.5rem 0;
+}
+
+.press-logo-img {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
   opacity: 0.7;
-  font-weight: 400;
+  margin: 0 3rem;
+  filter: brightness(0) invert(1);
+  transition: opacity 0.3s ease;
+}
+
+.press-logo-img:hover {
+  opacity: 1;
 }
 
 .superfoods {
@@ -324,6 +346,13 @@
 .center-product-wrapper.animate {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
+}
+
+.center-product-image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
 .nutrition-item-positioned {
