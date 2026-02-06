@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { LogosCarousel } from '../components/LogosCarousel';
 import './Subscriptions.css';
 
@@ -97,11 +98,11 @@ export const Subscriptions = () => {
       </section>
 
       <section className="team-section scroll-animate">
-        <div className="team-image">
-          <img
-            src="https://www.saumrs.com/wp-content/uploads/2023/08/Every_Human_is_Different-transformed.jpeg"
-            alt="Every Human is Different"
-          />
+                    <div className="pricing-button">
+                      <Link to="/contact" className="btn-order">
+                        Book Consultation
+                      </Link>
+                    </div>
         </div>
       </section>
 

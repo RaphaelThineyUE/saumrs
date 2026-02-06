@@ -94,26 +94,20 @@ img.athlete-placeholder {
 
 .press-section {
   background: #3a3a3a;
+}
+
+.press-section .logos-carousel-section {
+  background: transparent;
   padding: 2rem 0;
-  overflow: hidden;
 }
 
-.press-marquee {
-  padding: 0.5rem 0;
-}
-
-.press-logo-img {
+.press-section .logo-item {
+  width: 200px;
   height: 60px;
-  width: auto;
-  object-fit: contain;
-  opacity: 0.7;
-  margin: 0 3rem;
-  filter: brightness(0) invert(1);
-  transition: opacity 0.3s ease;
 }
 
-.press-logo-img:hover {
-  opacity: 1;
+.press-section .logos-track {
+  gap: 48px;
 }
 
 .superfoods {

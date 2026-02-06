@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Marquee from 'react-fast-marquee';
+import { LogosCarousel } from '../components/LogosCarousel';
 import { useScrollAnimation, useParallax } from '../hooks/useAnimations';
 import './Home.css';
 
@@ -52,18 +52,7 @@ export const Home = () => {
       </section>
 
       <section className="press-section">
-        <Marquee speed={40} gradient={false} pauseOnHover={true}>
-          <img src="/images/bloomberg-radio-logo-300x200-white-q6yrxgjsmah44e9zqfmcd2ql8qnamuxu1lotcgbp1m.png" alt="Bloomberg" className="press-logo-img" />
-          <img src="/images/yahoo-news-logo-300x200-white-q6yrxifgzyjorm79fgfli29ifie1295apuzsb08wp6.png" alt="Yahoo! News" className="press-logo-img" />
-          <img src="/images/exceleon-magazine-logo-300x200-white-q6yrxhhmt4ieg08mky0yxki1u4inuk1kdqcatqaave.png" alt="Exeleon" className="press-logo-img" />
-          <img src="/images/medium-logo-300x200-white-q6yrxhhmt4ieg08mky0yxki1u4inuk1kdqcatqaave.png" alt="Medium" className="press-logo-img" />
-          <img src="/images/fast-company-new-logos-300x200-white-q6yrxhhmt4ieg08mky0yxki1u4inuk1kdqcatqaave.png" alt="Fast Company" className="press-logo-img" />
-          <img src="/images/entrepreneur-magazine-logo-300x200-white-q6yrxgjsmah44e9zqfmcd2ql8qnamuxu1lotcgbp1m.png" alt="Entrepreneur" className="press-logo-img" />
-          <img src="/images/bloomberg-radio-logo-300x200-white-q6yrxgjsmah44e9zqfmcd2ql8qnamuxu1lotcgbp1m.png" alt="Bloomberg" className="press-logo-img" />
-          <img src="/images/yahoo-news-logo-300x200-white-q6yrxifgzyjorm79fgfli29ifie1295apuzsb08wp6.png" alt="Yahoo! News" className="press-logo-img" />
-          <img src="/images/exceleon-magazine-logo-300x200-white-q6yrxhhmt4ieg08mky0yxki1u4inuk1kdqcatqaave.png" alt="Exeleon" className="press-logo-img" />
-          <img src="/images/medium-logo-300x200-white-q6yrxhhmt4ieg08mky0yxki1u4inuk1kdqcatqaave.png" alt="Medium" className="press-logo-img" />
-        </Marquee>
+        <LogosCarousel />
       </section>
 
       <section className="superfoods">
@@ -108,9 +97,9 @@ export const Home = () => {
       </section>
 
       <section className="ingredients-section">
-        <a href="#ingredients" className="btn-primary">
+        <Link to="/ingredients" className="btn-primary">
           🔬 Ingredients
-        </a>
+        </Link>
       </section>
 
       <section className="subscribe-section">

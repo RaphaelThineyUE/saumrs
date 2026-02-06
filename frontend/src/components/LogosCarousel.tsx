@@ -27,12 +27,12 @@ export const LogosCarousel = () => {
   }, []);
 
   const logos = [
-    { name: 'Yahoo News', file: 'yahoo-news-logo-300x200-white.png' },
-    { name: 'Exceleon Magazine', file: 'exceleon-magazine-logo-300x200-white.png' },
-    { name: 'Medium', file: 'medium-logo-300x200-white.png' },
-    { name: 'Fast Company', file: 'fast-company-new-logos-300x200-white.png' },
-    { name: 'Entrepreneur Magazine', file: 'entrepreneur-magazine-logo-300x200-white.png' },
-    { name: 'Bloomberg Radio', file: 'bloomberg-radio-logo-300x200-white.png' },
+    { name: 'Yahoo News', file: 'yahoo-news-logo-300x200-white-q6yrxifgzyjorm79fgfli29ifie1295apuzsb08wp6.png' },
+    { name: 'Exceleon Magazine', file: 'exceleon-magazine-logo-300x200-white-q6yrxhhmt4ieg08mky0yxki1u4inuk1kdqcatqaave.png' },
+    { name: 'Medium', file: 'medium-logo-300x200-white-q6yrxhhmt4ieg08mky0yxki1u4inuk1kdqcatqaave.png' },
+    { name: 'Fast Company', file: 'fast-company-new-logos-300x200-white-q6yrxhhmt4ieg08mky0yxki1u4inuk1kdqcatqaave.png' },
+    { name: 'Entrepreneur Magazine', file: 'entrepreneur-magazine-logo-300x200-white-q6yrxgjsmah44e9zqfmcd2ql8qnamuxu1lotcgbp1m.png' },
+    { name: 'Bloomberg Radio', file: 'bloomberg-radio-logo-300x200-white-q6yrxgjsmah44e9zqfmcd2ql8qnamuxu1lotcgbp1m.png' },
   ];
 
   return (
