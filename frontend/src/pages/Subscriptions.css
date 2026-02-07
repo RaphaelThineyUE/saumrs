@@ -116,6 +116,7 @@
   position: relative;
   border-right: 1px solid #ddd;
   background: #fff;
+  overflow: hidden;
 }
 
 .pricing-card:last-child {
@@ -124,20 +125,23 @@
 
 .pricing-badge {
   position: absolute;
-  top: -15px;
-  right: 20px;
+  top: 16px;
+  right: -46px;
   background: #000;
   color: #fff;
-  padding: 0.4rem 1rem;
-  font-size: 0.75rem;
-  transform: rotate(-5deg);
+  padding: 0.35rem 3.2rem;
+  font-size: 0.7rem;
   letter-spacing: 1px;
+  text-transform: uppercase;
+  transform: rotate(45deg);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
 
 .pricing-header {
   background: #000;
   color: #fff;
   padding: 2rem 1.5rem;
+  min-height: 120px;
 }
 
 .pricing-header h3 {
