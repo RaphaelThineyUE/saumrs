@@ -5,6 +5,8 @@ export { Home } from './Home';
 export { Contact } from './Contact';
 export { Order } from './Order';
 export { Subscriptions } from './Subscriptions';
+export { IngredientDetail } from './IngredientDetail';
+export { ProteinDetail } from './ProteinDetail';
 
 export const NotFound = () => (
   <div style={{ marginTop: '53px', padding: '4rem', minHeight: 'calc(100vh - 53px)', background: '#fff', textAlign: 'center' }}>

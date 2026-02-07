@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { LogosCarousel } from '../components/LogosCarousel';
+import { subscriptionPlans } from '../data/subscriptionPlans';
 import './Subscriptions.css';
 
 export const Subscriptions = () => {
@@ -26,60 +27,6 @@ export const Subscriptions = () => {
     };
   }, []);
 
-  const pricingPlans = [
-    {
-      title: '3-Month',
-      subtitle: 'Subscription',
-      originalPrice: '',
-      price: '$600-900',
-      period: 'Billed Every 3 Months',
-      ribbon: '',
-      features: [
-        'One (1) Bag of Protein',
-        'Three (3) Bag of SAUMRS',
-        'Item Total = 4 Bags of Product',
-        'Scheduled = Every Three (3) MO',
-        'Deliveries = One (1)',
-        'Total = 1 Bag of Protein',
-        'Total = 3 Bags of SAUMRS',
-      ],
-    },
-    {
-      title: 'Bi-Annually',
-      subtitle: 'Subscription',
-      originalPrice: '$1800',
-      price: '$1,100-1,650',
-      period: 'Billed Every 6 Months',
-      ribbon: '10% Off',
-      features: [
-        'One (1) Bag of Protein',
-        'Three (3) Bag of SAUMRS',
-        'Item Total = 4 Bags of Product',
-        'Scheduled = Every Three (3) MO',
-        'Deliveries = Two (2)',
-        'Total = 2 Bags of Protein',
-        'Total = 6 Bags of SAUMRS',
-      ],
-    },
-    {
-      title: 'Yearly',
-      subtitle: 'Subscription',
-      originalPrice: '$3600',
-      price: '$2,000-3,000',
-      period: 'Billed Every Year',
-      ribbon: '15% Off',
-      features: [
-        'One (1) Bag of Protein',
-        'Three (3) Bag of SAUMRS',
-        'Item Total = 4 Bags of Product',
-        'Scheduled = Every Three (3) MO',
-        'Deliveries = Four (4)',
-        'Total = 4 Bags of Protein',
-        'Total = 12 Bags of SAUMRS',
-      ],
-    },
-  ];
-
   return (
     <div className="subscriptions-page">
       <section className="subscriptions-title scroll-animate">
@@ -98,11 +45,11 @@ export const Subscriptions = () => {
       </section>
 
       <section className="team-section scroll-animate">
-                    <div className="pricing-button">
-                      <Link to="/contact" className="btn-order">
-                        Book Consultation
-                      </Link>
-                    </div>
+        <div className="team-image">
+          <img
+            src="/images/Every_Human_is_Different-transformed.jpeg"
+            alt="Every Human is Different"
+          />
         </div>
       </section>
 
@@ -115,7 +62,7 @@ export const Subscriptions = () => {
         </div>
         <div className="bespoke-image">
           <img
-            src="https://www.saumrs.com/wp-content/uploads/2023/08/bowl-of-dna-stranded-vegetables-and-superfoods.png"
+            src="/images/bowl-of-dna-stranded-vegetables-and-superfoods.png"
             alt="Nutrition"
           />
         </div>
@@ -123,7 +70,7 @@ export const Subscriptions = () => {
 
       <section className="pricing-section scroll-animate">
         <div className="pricing-grid">
-          {pricingPlans.map((plan) => (
+          {subscriptionPlans.map((plan) => (
             <div key={plan.title} className="pricing-card">
               {plan.ribbon && <div className="pricing-badge">{plan.ribbon}</div>}
               <div className="pricing-header">
@@ -159,7 +106,7 @@ export const Subscriptions = () => {
       <section className="final-cta scroll-animate">
         <div className="final-cta-image">
           <img
-            src="https://www.saumrs.com/wp-content/uploads/2023/08/Every_Human_is_Different-transformed.jpeg"
+            src="/images/Every_Human_is_Different-transformed.jpeg"
             alt="Every Human is Different"
           />
         </div>

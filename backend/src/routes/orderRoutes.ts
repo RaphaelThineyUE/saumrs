@@ -77,6 +77,12 @@ router.post("/", async (req: OrderRequest, res: Response) => {
     await emailService.sendOrderConfirmationEmail(
       customerName,
       customerEmail,
+      customerPhone,
+      address,
+      city,
+      state,
+      zipCode,
+      notes,
       order._id.toString(),
       totalAmount,
       products,
@@ -93,6 +99,7 @@ router.post("/", async (req: OrderRequest, res: Response) => {
       city,
       state,
       zipCode,
+      products,
       totalAmount,
       notes,
     });

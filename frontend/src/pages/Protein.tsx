@@ -1,86 +1,7 @@
+import { Link } from 'react-router-dom';
 import './Protein.css';
 import { LogosCarousel } from '../components/LogosCarousel';
-
-type ProteinItem = {
-  href: string;
-  title: string;
-  price: string;
-  images: string[];
-  description: string;
-};
-
-const proteins: ProteinItem[] = [
-  {
-    href: 'https://www.saumrs.com/protein/organic-grass-fed-hydrolyzed-collagen-peptides/',
-    title: 'Organic Grass-Fed Hydrolyzed Collagen Peptides',
-    price: '$80.00',
-    images: [
-      'https://www.saumrs.com/wp-content/uploads/2023/08/Organic-Grass-Fed-Hydrolyzed-Collagen-Peptides-FN-CARD.png',
-      'https://www.saumrs.com/wp-content/uploads/2023/07/Hydrolyzed-Collagen-Peptides-Grass-Fed-Protein.png',
-    ],
-    description: 'Health Concerns- Healthy Immune Response, Digestion, Indigestion',
-  },
-  {
-    href: 'https://www.saumrs.com/protein/organic-grass-fed-whey-protein-isolate/',
-    title: 'Organic Grass-Fed Whey Protein Isolate',
-    price: '$125.00',
-    images: [
-      'https://www.saumrs.com/wp-content/uploads/2023/08/Organic-Grass-Fed-Hydrolyzed-Collagen-Peptides-FN-CARD.png',
-      'https://www.saumrs.com/wp-content/uploads/2023/07/Organic-Grass-Fed-Whey-Protein-Isolate.png',
-    ],
-    description: 'Health Concerns- Healthy Immune Response, Digestion, Indigestion',
-  },
-  {
-    href: 'https://www.saumrs.com/protein/organic-grass-fed-whey-protein-concentrate/',
-    title: 'Organic Grass-Fed Whey Protein Concentrate',
-    price: '$125.00',
-    images: [
-      'https://www.saumrs.com/wp-content/uploads/2023/08/Organic-Grass-Fed-Whey-Protein-Concentrate-FN-CARD.png',
-      'https://www.saumrs.com/wp-content/uploads/2023/07/Organic-Grass-Fed-Whey-Concentrate.png',
-    ],
-    description: 'Health Concerns- Healthy Immune Response, Digestion, Indigestion',
-  },
-  {
-    href: 'https://www.saumrs.com/protein/organic-hemp-protein/',
-    title: 'Organic Hemp Protein',
-    price: '$70.00',
-    images: [
-      'https://www.saumrs.com/wp-content/uploads/2023/08/Organic-Raw-Hemp-FN-CARD.png',
-      'https://www.saumrs.com/wp-content/uploads/2023/07/Organic-Hemp-Protein.png',
-    ],
-    description: 'Health Concerns- Healthy Immune Response, Digestion, Indigestion',
-  },
-  {
-    href: 'https://www.saumrs.com/protein/organic-pumpkin-seed-protein/',
-    title: 'Organic Pumpkin Seed Protein',
-    price: '$80.00',
-    images: [
-      'https://www.saumrs.com/wp-content/uploads/2023/08/Organic-Pumpkin-Seed-Protein-FN-CARD.png',
-      'https://www.saumrs.com/wp-content/uploads/2023/07/Organic-Pumpkin-Seed-Protein.png',
-    ],
-    description: 'Health Concerns- Healthy Immune Response, Digestion, Indigestion',
-  },
-  {
-    href: 'https://www.saumrs.com/protein/organic-silk-brown-rice-protein-powder/',
-    title: 'Organic Silk Brown Rice Protein Powder',
-    price: '$75.00',
-    images: [
-      'https://www.saumrs.com/wp-content/uploads/2023/08/Organic-Silk-Brown-Rice-Protein-FN-CARD.png',
-      'https://www.saumrs.com/wp-content/uploads/2023/07/Organic-Silk-Brown-Rice-Protein-Powder.png',
-    ],
-    description: 'Health Concerns- Healthy Immune Response, Digestion, Indigestion',
-  },
-  {
-    href: 'https://www.saumrs.com/protein/organic-pea-protein/',
-    title: 'Organic Pea Protein',
-    price: '$60.00',
-    images: [
-      'https://www.saumrs.com/wp-content/uploads/2023/08/Organic-Pea-FN-CARD.png',
-      'https://www.saumrs.com/wp-content/uploads/2023/07/Organic-Pea-Protein.png',
-    ],
-    description: 'Health Concerns- Healthy Immune Response, Digestion, Indigestion',
-  },
-];
+import { proteinDetails } from '../data/proteinDetails';
 
 export const Protein = () => (
   <div className="protein-page">
@@ -91,7 +12,7 @@ export const Protein = () => (
       </div>
       <div className="protein-hero-image">
         <img
-          src="https://www.saumrs.com/wp-content/uploads/2023/07/Organic-Grass-Fed-Whey-Protein-Isolate.png"
+          src="/images/Organic-Grass-Fed-Whey-Protein-Isolate.png"
           alt="Organic Grass-Fed Whey Protein Isolate"
         />
       </div>
@@ -110,33 +31,26 @@ export const Protein = () => (
 
     <section className="protein-products">
       <div className="protein-products-grid">
-        {proteins.map((protein) => {
-          const label = 'Health Concerns-';
-          const rest = protein.description.startsWith(label)
-            ? protein.description.slice(label.length).trim()
-            : protein.description;
-
-          return (
-            <a key={protein.title} className="protein-card" href={protein.href}>
-              <div className="protein-card-images">
-                {protein.images.map((src, index) => (
-                  <img
-                    key={`${protein.title}-${index}`}
-                    src={src}
-                    alt={protein.title}
-                    loading="lazy"
-                  />
-                ))}
-              </div>
-              <h3>{protein.title}</h3>
-              <h2 className="protein-price">{protein.price}</h2>
-              <p className="protein-description">
-                <em>Health</em> <em>Concerns</em>-<br />
-                {rest}
-              </p>
-            </a>
-          );
-        })}
+        {proteinDetails.map((protein) => (
+          <Link key={protein.slug} className="protein-card" to={`/protein/${protein.slug}`}>
+            <div className="protein-card-images">
+              {protein.images.map((src, index) => (
+                <img
+                  key={`${protein.slug}-${index}`}
+                  src={src}
+                  alt={protein.title}
+                  loading="lazy"
+                />
+              ))}
+            </div>
+            <h3>{protein.title}</h3>
+            <h2 className="protein-price">{protein.price}</h2>
+            <p className="protein-description">
+              <em>Health</em> <em>Concerns</em>-<br />
+              {protein.healthConcerns}
+            </p>
+          </Link>
+        ))}
       </div>
     </section>
 

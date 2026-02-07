@@ -52,7 +52,7 @@ export const FivePillars = () => {
             </div>
             <div className="hero-right fade-in-up">
               <img 
-                src="https://www.saumrs.com/wp-content/uploads/2023/06/microscope-with-flasks-and-vials-chemistry-labratory-tools--1024x768.jpg" 
+                src="/images/microscope-with-flasks-and-vials-chemistry-labratory-tools--1024x768.jpg" 
                 alt="Microscope with flasks and vials. Chemistry laboratory tools."
                 loading="eager"
               />
