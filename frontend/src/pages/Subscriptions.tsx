@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { LogosCarousel } from '../components/LogosCarousel';
 import { subscriptionPlans } from '../data/subscriptionPlans';
 import './Subscriptions.css';

@@ -178,6 +178,16 @@
   box-shadow: 0 0 0 3px rgba(200, 107, 43, 0.15);
 }
 
+.form-group input:invalid:not(:placeholder-shown),
+.form-group textarea:invalid:not(:placeholder-shown) {
+  border-color: rgba(163, 58, 27, 0.5);
+}
+
+.form-group input:valid:not(:placeholder-shown),
+.form-group textarea:valid:not(:placeholder-shown) {
+  border-color: rgba(31, 107, 56, 0.3);
+}
+
 .quick-add {
   margin-top: 1.5rem;
 }
@@ -377,6 +387,20 @@
 .status-message.error {
   background: #fde5db;
   color: #a33a1b;
+}
+
+.progress-list {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: #f0f8ff;
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
+.progress-step {
+  padding: 0.35rem 0;
+  color: #2c5282;
+  font-family: 'IBM Plex Mono', monospace;
 }
 
 @media (max-width: 980px) {
