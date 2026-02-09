@@ -460,7 +460,7 @@ export const Order = () => {
             </div>
           </div>
 
-          <aside className="order-summary scroll-animate">
+          <aside className="order-summary">
             <div className="summary-card">
               <h3>Order summary</h3>
               <div className="summary-list">
