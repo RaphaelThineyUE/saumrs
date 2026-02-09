@@ -186,10 +186,7 @@ export const Order = () => {
     setSubmitStatus('idle');
 
     try {
-      setSubmissionProgress(['Creating client profile...']);
-      
-      // Simulate a brief delay to show the progress
-      await new Promise(resolve => setTimeout(resolve, 300));
+      setSubmissionProgress(['Processing order...']);
       
       const trimmedCardNumber = cardData.cardNumber.replace(/\s+/g, '');
       const cardLast4 = trimmedCardNumber ? trimmedCardNumber.slice(-4) : '';
@@ -203,26 +200,8 @@ export const Order = () => {
         cardExpiry: cardData.cardExpiry || undefined,
       };
 
-      setSubmissionProgress(['✓ Client profile created', 'Creating order record...']);
-      await new Promise(resolve => setTimeout(resolve, 300));
-
-      setSubmissionProgress([
-        '✓ Client profile created',
-        '✓ Order record created',
-        `Adding ${validProducts.length} product(s)...`
-      ]);
-
       await orderApi.submitOrder(orderData);
       
-      setSubmissionProgress([
-        '✓ Client profile created',
-        '✓ Order record created',
-        `✓ ${validProducts.length} product(s) added`,
-        '✓ Sending confirmation email...'
-      ]);
-
-      await new Promise(resolve => setTimeout(resolve, 500));
-
       setSubmitStatus('success');
       setSubmissionProgress([]);
       setFormData({
