@@ -1,9 +1,10 @@
 import "./airtableMock";
 
 import request from "supertest";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { createTableMock, resetTableMocks, setTableMock } from "./airtableMock";
+import { emailService } from "../services/EmailService.js";
 
 const CLIENTS_TABLE = "Clients";
 const ORDERS_TABLE = "Orders";
@@ -103,6 +104,7 @@ describe("Order routes", () => {
 
     expect(response.status).toBe(201);
     expect(response.body.data.id).toBe("rec-order");
+    expect(response.body.progress).toBeInstanceOf(Array);
   });
 
   it("returns 400 on missing required fields", async () => {
@@ -142,6 +144,88 @@ describe("Order routes", () => {
       });
 
     expect(response.status).toBe(500);
+  });
+
+  it("creates order even if email fails", async () => {
+    setTableMock(
+      CLIENTS_TABLE,
+      createTableMock({
+        createRecord: {
+          id: "rec-client-email",
+          fields: { "Contact Name": "Casey" },
+        },
+      }),
+    );
+    setTableMock(
+      ORDERS_TABLE,
+      createTableMock({
+        createRecord: {
+          id: "rec-order-email",
+          fields: {
+            "Order ID": 2001,
+            Client: ["rec-client-email"],
+            Products: ["rec-product-email"],
+            "Total Amount": 40,
+            "Delivery Address": "123 Main St",
+            City: "Denver",
+            State: "CO",
+            "Zip Code": 80202,
+            Status: "Pending",
+          },
+        },
+        updateRecord: {
+          id: "rec-order-email",
+          fields: {
+            "Order ID": 2001,
+            Client: ["rec-client-email"],
+            Products: ["rec-product-email"],
+            "Total Amount": 40,
+            "Delivery Address": "123 Main St",
+            City: "Denver",
+            State: "CO",
+            "Zip Code": 80202,
+            Status: "Pending",
+          },
+        },
+      }),
+    );
+    setTableMock(
+      PRODUCTS_TABLE,
+      createTableMock({
+        createRecord: {
+          id: "rec-product-email",
+          fields: {
+            "Product ID": 1,
+            Name: "Starter",
+            Quantity: 1,
+            Price: 40,
+          },
+        },
+      }),
+    );
+
+    vi.mocked(emailService.sendOrderConfirmationEmail).mockRejectedValueOnce(
+      new Error("Email down"),
+    );
+
+    const api = await loadApp();
+    const response = await request(api)
+      .post("/api/orders")
+      .send({
+        customerName: "Casey",
+        customerEmail: "casey@example.com",
+        customerPhone: "123",
+        address: "123 Main St",
+        city: "Denver",
+        state: "CO",
+        zipCode: "80202",
+        products: [{ id: "prod-1", name: "Starter", quantity: 1, price: 40 }],
+        totalAmount: 40,
+      });
+
+    expect(response.status).toBe(201);
+    expect(response.body.data.id).toBe("rec-order-email");
+    expect(response.body.warnings).toContain("Confirmation email failed");
   });
 
   it("lists orders", async () => {

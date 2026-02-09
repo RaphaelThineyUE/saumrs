@@ -135,9 +135,9 @@ vi.mock("../services/airtableService.js", () => {
 vi.mock("../services/EmailService.js", () => {
   return {
     emailService: {
-      sendContactFormEmail: () => Promise.resolve(),
-      sendOrderConfirmationEmail: () => Promise.resolve(),
-      sendOrderNotificationEmail: () => Promise.resolve(),
+      sendContactFormEmail: vi.fn(() => Promise.resolve()),
+      sendOrderConfirmationEmail: vi.fn(() => Promise.resolve()),
+      sendOrderNotificationEmail: vi.fn(() => Promise.resolve()),
     },
   };
 });

@@ -437,6 +437,8 @@ function mapOrderRecord(
 router.post("/", async (req: OrderRequest, res: Response) => {
   try {
     const fields = buildOrderFields(req.body) as OrderInput;
+    const progress: Array<{ label: string; status: "success" | "warning" }> = [];
+    const warnings: string[] = [];
 
     // Validate required fields
     if (
@@ -470,6 +472,7 @@ router.post("/", async (req: OrderRequest, res: Response) => {
     const clientRecord = Array.isArray(createdClients)
       ? createdClients[0]
       : createdClients;
+    progress.push({ label: "Account created", status: "success" });
 
     const createdOrders = await base(ORDERS_TABLE).create(
       [
@@ -488,6 +491,7 @@ router.post("/", async (req: OrderRequest, res: Response) => {
     const orderRecord = Array.isArray(createdOrders)
       ? createdOrders[0]
       : createdOrders;
+    progress.push({ label: "Order created", status: "success" });
 
     const productRecords = await Promise.all(
       fields.products.map(async (product) => {
@@ -505,9 +509,14 @@ router.post("/", async (req: OrderRequest, res: Response) => {
           ],
           { typecast: true },
         );
-        return Array.isArray(createdProducts)
+        const record = Array.isArray(createdProducts)
           ? createdProducts[0]
           : createdProducts;
+        progress.push({
+          label: `Product created: ${product.name}`,
+          status: "success",
+        });
+        return record;
       }),
     );
 
@@ -531,40 +540,68 @@ router.post("/", async (req: OrderRequest, res: Response) => {
     );
 
     // Send confirmation email to customer
-    await emailService.sendOrderConfirmationEmail(
-      fields.customerName,
-      fields.customerEmail,
-      fields.customerPhone,
-      fields.address,
-      fields.city,
-      fields.state,
-      fields.zipCode,
-      fields.notes,
-      order.id,
-      fields.totalAmount,
-      fields.products,
-    );
+    try {
+      await emailService.sendOrderConfirmationEmail(
+        fields.customerName,
+        fields.customerEmail,
+        fields.customerPhone,
+        fields.address,
+        fields.city,
+        fields.state,
+        fields.zipCode,
+        fields.notes,
+        order.id,
+        fields.totalAmount,
+        fields.products,
+      );
+      progress.push({
+        label: "Confirmation email sent",
+        status: "success",
+      });
+    } catch (error) {
+      console.error("Order confirmation email failed:", error);
+      warnings.push("Confirmation email failed");
+      progress.push({
+        label: "Confirmation email failed",
+        status: "warning",
+      });
+    }
 
     // Send notification email to admin
     const recipientEmail =
       process.env.RECIPIENT_EMAIL || "raphael.thiney@gmail.com";
-    await emailService.sendOrderNotificationEmail(recipientEmail, {
-      customerName: fields.customerName,
-      customerEmail: fields.customerEmail,
-      customerPhone: fields.customerPhone,
-      address: fields.address,
-      city: fields.city,
-      state: fields.state,
-      zipCode: fields.zipCode,
-      products: fields.products,
-      totalAmount: fields.totalAmount,
-      notes: fields.notes,
-    });
+    try {
+      await emailService.sendOrderNotificationEmail(recipientEmail, {
+        customerName: fields.customerName,
+        customerEmail: fields.customerEmail,
+        customerPhone: fields.customerPhone,
+        address: fields.address,
+        city: fields.city,
+        state: fields.state,
+        zipCode: fields.zipCode,
+        products: fields.products,
+        totalAmount: fields.totalAmount,
+        notes: fields.notes,
+      });
+      progress.push({
+        label: "Admin notification sent",
+        status: "success",
+      });
+    } catch (error) {
+      console.error("Order notification email failed:", error);
+      warnings.push("Admin notification email failed");
+      progress.push({
+        label: "Admin notification failed",
+        status: "warning",
+      });
+    }
 
     res.status(201).json({
       success: true,
       message: "Order placed successfully",
       data: order,
+      progress,
+      warnings,
     });
   } catch (error) {
     console.error("Error placing order:", error);
