@@ -1,0 +1,172 @@
+{
+  "name": "Orders",
+  "id": "tblkb2valeQsLxEmx",
+  "fields": [
+    {
+      "name": "Order ID",
+      "type": "autoNumber",
+      "options": null
+    },
+    {
+      "name": "Client",
+      "type": "multipleRecordLinks",
+      "options": {
+        "linkedTableId": "tblJgu4QB7K6iehh7",
+        "isReversed": false,
+        "prefersSingleRecordLink": true,
+        "inverseLinkFieldId": "fld4tozfbXhHfIaOx"
+      }
+    },
+    {
+      "name": "Order Date",
+      "type": "dateTime",
+      "options": {
+        "dateFormat": {
+          "name": "iso",
+          "format": "YYYY-MM-DD"
+        },
+        "timeFormat": {
+          "name": "24hour",
+          "format": "HH:mm"
+        },
+        "timeZone": "utc"
+      }
+    },
+    {
+      "name": "Products",
+      "type": "multipleRecordLinks",
+      "options": {
+        "linkedTableId": "tblx7EpDubK9b254z",
+        "isReversed": false,
+        "prefersSingleRecordLink": false,
+        "inverseLinkFieldId": "fldRRlRgiOXYP9A1o"
+      }
+    },
+    {
+      "name": "Total Amount",
+      "type": "currency",
+      "options": {
+        "precision": 2,
+        "symbol": "$"
+      }
+    },
+    {
+      "name": "Notes",
+      "type": "multilineText",
+      "options": null
+    },
+    {
+      "name": "Delivery Address",
+      "type": "singleLineText",
+      "options": null
+    },
+    {
+      "name": "City",
+      "type": "singleLineText",
+      "options": null
+    },
+    {
+      "name": "State",
+      "type": "singleLineText",
+      "options": null
+    },
+    {
+      "name": "Zip Code",
+      "type": "number",
+      "options": {
+        "precision": 0
+      }
+    },
+    {
+      "name": "Status",
+      "type": "singleSelect",
+      "options": {
+        "choices": [
+          {
+            "id": "selX3YhWnqUV8s3v1",
+            "name": "Pending",
+            "color": "blueLight2"
+          },
+          {
+            "id": "selrVHygUZsESGK5E",
+            "name": "Processing",
+            "color": "cyanLight2"
+          },
+          {
+            "id": "selcP5BC2PBEnG3EW",
+            "name": "Delivered",
+            "color": "tealLight2"
+          },
+          {
+            "id": "selN0z15bYRVubQ0A",
+            "name": "Cancelled",
+            "color": "greenLight2"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Order Source",
+      "type": "singleSelect",
+      "options": {
+        "choices": [
+          {
+            "id": "sel0YMl5AzILmbHkU",
+            "name": "Online",
+            "color": "blueLight2"
+          },
+          {
+            "id": "selABpjMacwy1pDmF",
+            "name": "Phone",
+            "color": "cyanLight2"
+          },
+          {
+            "id": "selHYideMNF8TNHtl",
+            "name": "Email",
+            "color": "tealLight2"
+          },
+          {
+            "id": "selmBPmUWoa32s76P",
+            "name": "In-person",
+            "color": "greenLight2"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Priority",
+      "type": "singleSelect",
+      "options": {
+        "choices": [
+          {
+            "id": "selC1YG2sk1MRUgIq",
+            "name": "Low",
+            "color": "blueLight2"
+          },
+          {
+            "id": "selU3q84xpfckLVi9",
+            "name": "Medium",
+            "color": "cyanLight2"
+          },
+          {
+            "id": "selSBldUpBUb4vN8A",
+            "name": "High",
+            "color": "tealLight2"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Delivery Instructions",
+      "type": "multilineText",
+      "options": null
+    },
+    {
+      "name": "Product Quantities",
+      "type": "number",
+      "options": {
+        "precision": 1
+      }
+    }
+  ]
+}

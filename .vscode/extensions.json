@@ -3,7 +3,6 @@
     "ms-vscode.vscode-typescript-next",
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
-    "ms-azuretools.vscode-docker",
-    "mongodb.mongodb-vscode"
+    "ms-azuretools.vscode-docker"
   ]
 }

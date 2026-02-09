@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "docker-compose up",
+    "dev2": "docker compose --env-file backend/.env up",
     "dev:build": "docker-compose up --build",
     "build": "docker-compose build",
     "down": "docker-compose down",
@@ -13,8 +14,7 @@
     "logs:frontend": "docker-compose logs -f frontend",
     "backend": "cd backend && npm run dev",
     "frontend": "cd frontend && npm run dev",
-    "backend:build": "cd backend && npm run build",
-    "frontend:build": "cd frontend && npm run build",
+    "backend:build": "cd backend && npm r run build",
     "setup": "bash setup.sh",
     "visual:compare": "node scripts/visual-compare.cjs"
   },
@@ -32,7 +32,7 @@
     "playwright": "^1.41.2",
     "pngjs": "^7.0.0"
   },
-  "dependencies": {
+  "dependencies": { 
     "cheerio": "^1.2.0"
   }
 }

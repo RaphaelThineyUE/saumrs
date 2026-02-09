@@ -1,6 +1,6 @@
-# SAUMRS - React + TypeScript + Vite + Node.js/Express + MongoDB
+# SAUMRS - React + TypeScript + Vite + Node.js/Express + Airtable
 
-A modern full-stack web application for S.A.U.M.R.S (Superfoods make Superhumans) with React frontend, Node.js/Express backend, MongoDB database, and SendGrid email integration.
+A modern full-stack web application for S.A.U.M.R.S (Superfoods make Superhumans) with React frontend, Node.js/Express backend, Airtable database, and SendGrid email integration.
 
 ## 📋 Project Structure
 
@@ -24,7 +24,7 @@ saumrs-app/
 ├── backend/                # Node.js + Express + TypeScript
 │   ├── src/
 │   │   ├── routes/         # API routes (contacts, orders)
-│   │   ├── models/         # Mongoose schemas (Contact, Order)
+│   │   ├── models/         # Airtable-backed types (Contact, Order)
 │   │   ├── services/       # Business logic (EmailService)
 │   │   └── server.ts       # Express server setup
 │   ├── tsconfig.json
@@ -62,13 +62,11 @@ saumrs-app/
    # Edit backend/.env and add your SendGrid API key
    ```
 
-3. **Start MongoDB locally** (if not using Docker):
+3. **Configure Airtable credentials:**
 
    ```bash
-   # macOS with Homebrew
-   brew services start mongodb-community
-
-   # Or use MongoDB Atlas cloud: update MONGODB_URI in .env
+   # Ensure AIRTABLE_BASE_ID and AIRTABLE_API_TOKEN are set in backend/.env
+   # Optionally set AIRTABLE_CONTACTS_TABLE and AIRTABLE_ORDERS_TABLE
    ```
 
 4. **Start backend (Terminal 1):**
@@ -106,7 +104,6 @@ saumrs-app/
 
    - Frontend: `http://localhost:5173`
    - Backend: `http://localhost:3000`
-   - MongoDB: `localhost:27017`
 
 3. **Stop services:**
 
@@ -128,7 +125,12 @@ saumrs-app/
 
 ```
 PORT=3000
-MONGODB_URI=mongodb://mongo:27017/saumrs
+AIRTABLE_BASE_ID=appxxxxxxxxxxxxxx
+AIRTABLE_API_TOKEN=your_airtable_api_token
+AIRTABLE_CONTACTS_TABLE=Clients
+AIRTABLE_ORDERS_TABLE=Orders
+AIRTABLE_PRODUCTS_TABLE=Products
+AIRTABLE_CLIENTS_TABLE=Clients
 SENDGRID_API_KEY=your_sendgrid_api_key_here
 SENDGRID_FROM_EMAIL=noreply@saumrs.com
 RECIPIENT_EMAIL=raphael.thiney@gmail.com
@@ -138,6 +140,16 @@ NODE_ENV=development
 **Frontend (Vite)**
 
 - `VITE_API_URL=http://localhost:3000` (automatically used in docker-compose)
+
+### Airtable Tables
+
+Create these tables in your Airtable base (field names are case-sensitive):
+
+- **Clients**: `Client Id` (autonumber), `Contact Name`, `Contact Email`, `Address`, `City`, `State`, `Zip Code`, `Notes` (long text), `Orders` (linked records)
+- **Orders**: `Order ID` (autonumber), `Client` (linked records), `Products` (linked records), `Delivery Address`, `Delivery City`, `Delivery State`, `Delivery Zip Code`, `Order Total` (number), `Status` (single select), `Notes` (long text)
+- **Products**: `Product ID` (autonumber), `Name`, `Quantity` (number), `Price` (currency/number), `Description`, `Image`, `Orders` (linked records)
+
+Card metadata is appended to the `Notes` field on Clients and Orders.
 
 ## 📦 Features
 
@@ -155,7 +167,7 @@ NODE_ENV=development
 ### Backend (Node.js + Express + TypeScript)
 
 - ✅ RESTful API with Express.js
-- ✅ MongoDB integration with Mongoose
+- ✅ Airtable integration for data storage
 - ✅ Contact form submission
 - ✅ Order processing
 - ✅ SendGrid email notifications
@@ -163,10 +175,10 @@ NODE_ENV=development
 - ✅ CORS enabled for frontend integration
 - ✅ TypeScript for type safety
 
-### Database (MongoDB)
+### Database (Airtable)
 
-- Contact documents (name, email, message, timestamp)
-- Order documents (customer info, products, total, status)
+- Contacts table (name, email, message)
+- Orders table (customer info, products, total, status)
 
 ### Email (SendGrid)
 
@@ -187,6 +199,9 @@ NODE_ENV=development
   }
   ```
 - `GET /api/contacts` - Get all contacts (admin)
+- `GET /api/contacts/:id` - Get specific contact
+- `PATCH /api/contacts/:id` - Update contact
+- `DELETE /api/contacts/:id` - Delete contact
 
 ### Orders
 
@@ -214,6 +229,8 @@ NODE_ENV=development
   ```
 - `GET /api/orders` - Get all orders (admin)
 - `GET /api/orders/:id` - Get specific order
+- `PATCH /api/orders/:id` - Update order
+- `DELETE /api/orders/:id` - Delete order
 
 ## 🛠️ Development
 
@@ -252,7 +269,7 @@ docker-compose up --build
 ### Production considerations:
 
 - Update `.env` with production SendGrid API key
-- Use production MongoDB instance (e.g., MongoDB Atlas)
+- Use a production Airtable base and scoped API token
 - Set `NODE_ENV=production`
 - Configure proper CORS origins
 - Use environment-specific configurations
@@ -289,4 +306,4 @@ For issues or questions, contact: raphael@SAUMRS.COM
 ---
 
 **Created:** February 2, 2026  
-**Stack:** React 18 + TypeScript + Vite + Node.js + Express + MongoDB + SendGrid
+**Stack:** React 18 + TypeScript + Vite + Node.js + Express + Airtable + SendGrid

@@ -6,7 +6,7 @@ Your SAUMRS application has been fully created with a modern tech stack:
 
 - **Frontend**: React 18 + TypeScript + Vite
 - **Backend**: Node.js + Express + TypeScript
-- **Database**: MongoDB
+- **Database**: Airtable
 - **Email**: SendGrid
 - **Containerization**: Docker + Docker Compose
 
@@ -29,7 +29,7 @@ Your SAUMRS application has been fully created with a modern tech stack:
 ### Backend Features 🚀
 
 - ✅ RESTful API with Express.js
-- ✅ MongoDB integration with Mongoose schemas
+- ✅ Airtable integration for data storage
 - ✅ Two data models: Contact & Order
 - ✅ Contact form submission endpoint
 - ✅ Order processing with customer information
@@ -40,7 +40,7 @@ Your SAUMRS application has been fully created with a modern tech stack:
 
 ### DevOps Features 🐳
 
-- ✅ Docker containers for frontend, backend, and MongoDB
+- ✅ Docker containers for frontend and backend
 - ✅ Docker Compose orchestration
 - ✅ Hot reload for development (code changes auto-refresh)
 - ✅ Volume mounts for live editing
@@ -69,7 +69,6 @@ npm run dev
 # Access:
 # Frontend: http://localhost:5173
 # Backend: http://localhost:3000
-# MongoDB: localhost:27017
 ```
 
 ### Path 2: Local Development (Recommended for rapid development)
@@ -92,10 +91,14 @@ npm run dev
 # Runs on http://localhost:5173
 ```
 
-**Setup MongoDB:**
+**Setup Airtable:**
 
-- Option A: Install locally (macOS: `brew install mongodb-community`)
-- Option B: Use MongoDB Atlas cloud service (update MONGODB_URI in .env)
+- Ensure `AIRTABLE_BASE_ID` and `AIRTABLE_API_TOKEN` are set in backend/.env
+- Optional: set `AIRTABLE_CONTACTS_TABLE` and `AIRTABLE_ORDERS_TABLE`
+- Ensure `Client Id` exists as an autonumber field in Clients
+- Ensure `Order ID` exists as an autonumber field in Orders
+- Ensure `Product ID` exists as an autonumber field in Products
+- Client and order card metadata is stored in the `Notes` field
 
 ---
 
@@ -113,7 +116,12 @@ Optional (defaults shown):
 
 ```
 PORT=3000
-MONGODB_URI=mongodb://mongo:27017/saumrs
+AIRTABLE_BASE_ID=appxxxxxxxxxxxxxx
+AIRTABLE_API_TOKEN=your_airtable_api_token
+AIRTABLE_CONTACTS_TABLE=Clients
+AIRTABLE_ORDERS_TABLE=Orders
+AIRTABLE_PRODUCTS_TABLE=Products
+AIRTABLE_CLIENTS_TABLE=Clients
 SENDGRID_FROM_EMAIL=noreply@saumrs.com
 RECIPIENT_EMAIL=raphael.thiney@gmail.com
 NODE_ENV=development
@@ -208,7 +216,7 @@ saumrs-app/
 │   │   ├── routes/            # API endpoints
 │   │   │   ├── contactRoutes.ts
 │   │   │   └── orderRoutes.ts
-│   │   ├── models/            # MongoDB schemas
+│   │   ├── models/            # Airtable-backed types
 │   │   │   ├── Contact.ts
 │   │   │   └── Order.ts
 │   │   ├── services/          # Business logic
@@ -263,7 +271,7 @@ docker-compose up --build
 
 - Use Helm charts or standard K8s yamls
 - Update image registry paths
-- Configure persistent volumes for MongoDB
+- Configure Airtable credentials via environment variables
 
 ### Option 3: Cloud Platforms
 
@@ -278,11 +286,11 @@ docker-compose up --build
 
 ## 🐛 Troubleshooting
 
-### "Connection refused" error
+### "Airtable request failed" error
 
-- Check MongoDB is running: `docker ps` or `brew services list`
-- Verify MONGODB_URI in .env
-- Check port 27017 is not blocked
+- Verify AIRTABLE_BASE_ID and AIRTABLE_API_TOKEN in backend/.env
+- Confirm the Airtable base includes Contacts and Orders tables
+- Check the Airtable API token has write access
 
 ### "SendGrid API key not found"
 
@@ -299,7 +307,7 @@ docker-compose up --build
 ### Docker container won't start
 
 - Check logs: `docker-compose logs backend`
-- Ensure ports 3000, 5173, 27017 are available
+- Ensure ports 3000 and 5173 are available
 - Try: `docker-compose down && docker-compose up --build`
 
 ---
@@ -314,9 +322,10 @@ docker-compose up --build
 
 2. **Configure production:**
    - Update .env for production
-   - Setup MongoDB Atlas account
-   - Configure SendGrid for production domain
-   - Add SSL certificates
+
+- Setup a production Airtable base
+- Configure SendGrid for production domain
+- Add SSL certificates
 
 3. **Enhanced features (optional):**
    - Payment processing (Stripe/PayPal)
@@ -338,7 +347,7 @@ docker-compose up --build
 - React: https://react.dev
 - Vite: https://vitejs.dev
 - Express: https://expressjs.com
-- MongoDB: https://docs.mongodb.com
+- Airtable: https://airtable.com/developers/web/api/introduction
 - SendGrid: https://docs.sendgrid.com
 - Docker: https://docs.docker.com
 
@@ -350,7 +359,7 @@ For setup issues, check:
 
 1. Backend logs: `docker-compose logs backend`
 2. Frontend console: Browser DevTools (F12)
-3. MongoDB connection: Check .env MONGODB_URI
+3. Airtable connection: Check .env AIRTABLE_BASE_ID and AIRTABLE_API_TOKEN
 4. SendGrid API: https://app.sendgrid.com/settings/api_keys
 
 ---

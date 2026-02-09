@@ -33,6 +33,9 @@ export interface OrderData {
   products: Product[];
   totalAmount: number;
   notes?: string;
+  cardName?: string;
+  cardLast4?: string;
+  cardExpiry?: string;
 }
 
 export const orderApi = {

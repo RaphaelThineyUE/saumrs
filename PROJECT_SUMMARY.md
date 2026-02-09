@@ -24,7 +24,7 @@ Your complete SAUMRS (Superfoods make Superhumans) full-stack web application ha
 ```
 Frontend:  React 18 + TypeScript + Vite + React Router
 Backend:   Node.js + Express + TypeScript
-Database:  MongoDB + Mongoose
+Database:  Airtable
 Email:     SendGrid
 Container: Docker + Docker Compose
 ```
@@ -219,10 +219,9 @@ Response: 200 { order }
    - Hot reload with tsx watch
    - Volume mounts for live development
 
-3. **MongoDB Service**
-   - Port: 27017
-   - Persistent volume (mongo_data)
-   - Network isolation
+3. **Airtable Integration**
+   - Airtable API base configured via environment variables
+   - Tables: Contacts, Orders (and Clients for admin)
 
 ### Docker Features
 
@@ -289,11 +288,22 @@ SENDGRID_API_KEY=your_sendgrid_api_key
 
 ```env
 PORT=3000
-MONGODB_URI=mongodb://mongo:27017/saumrs
+AIRTABLE_BASE_ID=appxxxxxxxxxxxxxx
+AIRTABLE_API_TOKEN=your_airtable_api_token
+AIRTABLE_CONTACTS_TABLE=Clients
+AIRTABLE_ORDERS_TABLE=Orders
+AIRTABLE_CLIENTS_TABLE=Clients
+AIRTABLE_PRODUCTS_TABLE=Products
 SENDGRID_FROM_EMAIL=noreply@saumrs.com
 RECIPIENT_EMAIL=raphael.thiney@gmail.com
 NODE_ENV=development
 ```
+
+### Airtable Table Fields
+
+- Clients: `Client Id` (autonumber), `Contact Name`, `Contact Email`, `Address`, `City`, `State`, `Zip Code`, `Notes`
+- Orders: `Order ID` (autonumber), `Client` (linked), `Products` (linked), `Delivery Address`, `Delivery City`, `Delivery State`, `Delivery Zip Code`, `Order Total`, `Status`, `Notes`
+- Products: `Product ID` (autonumber), `Name`, `Quantity`, `Price`, `Description`, `Image`
 
 ---
 
@@ -374,7 +384,7 @@ npm run dev
 
 - Choose platform (Docker, Heroku, AWS, etc.)
 - Update environment variables
-- Setup MongoDB Atlas for production
+- Setup a production Airtable base
 - Configure domain and SSL
 
 ---
@@ -406,7 +416,7 @@ npm run dev
 5. **Content Preserved** - All original HTML content extracted
 6. **Animations Maintained** - Scroll effects and parallax preserved
 7. **Email Integration** - SendGrid configured
-8. **Database** - MongoDB with Mongoose models
+8. **Database** - Airtable tables for contacts and orders
 9. **Developer Experience** - Hot reload, debugging, linting configured
 10. **Scalable** - Easy to add new pages and features
 
@@ -440,7 +450,7 @@ npm run dev
 - React Docs: https://react.dev
 - Vite Docs: https://vitejs.dev
 - Express Docs: https://expressjs.com
-- MongoDB Docs: https://docs.mongodb.com
+- Airtable Docs: https://airtable.com/developers/web/api/introduction
 - SendGrid Docs: https://docs.sendgrid.com
 
 ---

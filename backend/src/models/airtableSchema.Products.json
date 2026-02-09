@@ -1,0 +1,53 @@
+{
+  "name": "Products",
+  "id": "tblx7EpDubK9b254z",
+  "fields": [
+    {
+      "name": "Product ID",
+      "type": "autoNumber",
+      "options": null
+    },
+    {
+      "name": "Name",
+      "type": "singleLineText",
+      "options": null
+    },
+    {
+      "name": "Quantity",
+      "type": "number",
+      "options": {
+        "precision": 0
+      }
+    },
+    {
+      "name": "Price",
+      "type": "currency",
+      "options": {
+        "precision": 2,
+        "symbol": "$"
+      }
+    },
+    {
+      "name": "Description",
+      "type": "multilineText",
+      "options": null
+    },
+    {
+      "name": "Image",
+      "type": "multipleAttachments",
+      "options": {
+        "isReversed": false
+      }
+    },
+    {
+      "name": "Orders",
+      "type": "multipleRecordLinks",
+      "options": {
+        "linkedTableId": "tblkb2valeQsLxEmx",
+        "isReversed": false,
+        "prefersSingleRecordLink": false,
+        "inverseLinkFieldId": "fldpXkrRqO0MuZGNX"
+      }
+    }
+  ]
+}

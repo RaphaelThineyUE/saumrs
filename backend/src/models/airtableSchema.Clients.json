@@ -1,0 +1,68 @@
+{
+  "name": "Clients",
+  "id": "tblJgu4QB7K6iehh7",
+  "fields": [
+    {
+      "name": "Client Id",
+      "type": "autoNumber",
+      "options": null
+    },
+    {
+      "name": "Contact Name",
+      "type": "singleLineText",
+      "options": null
+    },
+    {
+      "name": "Name",
+      "type": "singleLineText",
+      "options": null
+    },
+    {
+      "name": "Contact Phone",
+      "type": "phoneNumber",
+      "options": null
+    },
+    {
+      "name": "Contact Email",
+      "type": "email",
+      "options": null
+    },
+    {
+      "name": "Address",
+      "type": "singleLineText",
+      "options": null
+    },
+    {
+      "name": "City",
+      "type": "singleLineText",
+      "options": null
+    },
+    {
+      "name": "State",
+      "type": "singleLineText",
+      "options": null
+    },
+    {
+      "name": "Zip Code",
+      "type": "number",
+      "options": {
+        "precision": 0
+      }
+    },
+    {
+      "name": "Notes",
+      "type": "multilineText",
+      "options": null
+    },
+    {
+      "name": "Orders",
+      "type": "multipleRecordLinks",
+      "options": {
+        "linkedTableId": "tblkb2valeQsLxEmx",
+        "isReversed": false,
+        "prefersSingleRecordLink": false,
+        "inverseLinkFieldId": "fldz90IqismtvHGUm"
+      }
+    }
+  ]
+}

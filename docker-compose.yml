@@ -1,16 +1,4 @@
 services:
-  mongo:
-    image: mongo:7.0
-    container_name: saumrs-mongo
-    ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_DATABASE: saumrs
-    volumes:
-      - mongo_data:/data/db
-    networks:
-      - saumrs-network
-
   backend:
     build:
       context: ./backend
@@ -18,15 +6,8 @@ services:
     container_name: saumrs-backend
     ports:
       - "3000:3000"
-    environment:
-      PORT: 3000
-      MONGODB_URI: mongodb://mongo:27017/saumrs
-      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
-      SENDGRID_FROM_EMAIL: ${SENDGRID_FROM_EMAIL:-noreply@saumrs.com}
-      RECIPIENT_EMAIL: ${RECIPIENT_EMAIL:-raphael.thiney@gmail.com}
-      NODE_ENV: ${NODE_ENV:-development}
-    depends_on:
-      - mongo
+    env_file:
+      - ./backend/.env
     volumes:
       - ./backend/src:/app/src
     networks:
@@ -51,9 +32,6 @@ services:
     networks:
       - saumrs-network
     command: npm run dev
-
-volumes:
-  mongo_data:
 
 networks:
   saumrs-network:

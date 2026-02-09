@@ -1,20 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useScrollAnimation } from '../hooks/useAnimations';
 import { orderApi, OrderData, Product } from '../api/client';
 import { subscriptionPlans } from '../data/subscriptionPlans';
 import './Order.css';
-const defaultPlan = subscriptionPlans[0];
+
 const singleBagProductId = 'single-bag';
+
+const createProductRow = (seed?: Partial<Product>): Product => ({
+  id: seed?.id ?? `custom-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+  name: seed?.name ?? '',
+  quantity: seed?.quantity ?? 1,
+  price: seed?.price ?? 0,
+});
 
 export const Order = () => {
   useScrollAnimation();
-  const [orderType, setOrderType] = useState<'subscription' | 'one-time'>('subscription');
-  const [selectedPlanId, setSelectedPlanId] = useState(defaultPlan.id);
-  const [planAmount, setPlanAmount] = useState(defaultPlan.minPrice);
-  const [planAmountError, setPlanAmountError] = useState('');
-  const [singleBagPrice, setSingleBagPrice] = useState(225);
-  const [singleBagQuantity, setSingleBagQuantity] = useState(1);
-  const [cart, setCart] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [formData, setFormData] = useState({
     customerName: '',
     customerEmail: '',
@@ -31,36 +32,22 @@ export const Order = () => {
     cardExpiry: '',
     cardCvc: '',
   });
+  const [productError, setProductError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>(
+    'idle'
+  );
 
   useEffect(() => {
-    if (orderType === 'subscription') {
-      const selectedPlan =
-        subscriptionPlans.find((plan) => plan.id === selectedPlanId) || defaultPlan;
-
-      setCart([
-        {
-          id: selectedPlan.id,
-          name: `${selectedPlan.title} ${selectedPlan.subtitle}`,
-          quantity: 1,
-          price: planAmount,
-        },
-      ]);
-      return;
+    if (products.length === 0) {
+      setProducts([createProductRow()]);
     }
+  }, [products.length]);
 
-    setCart([
-      {
-        id: singleBagProductId,
-        name: 'Single Bag (One-Time)',
-        quantity: singleBagQuantity,
-        price: singleBagPrice,
-      },
-    ]);
-  }, [orderType, selectedPlanId, planAmount, singleBagPrice, singleBagQuantity]);
-
-  const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalAmount = useMemo(
+    () => products.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    [products]
+  );
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -72,25 +59,6 @@ export const Order = () => {
     }));
   };
 
-  const handleQuantityChange = (index: number, quantity: number) => {
-    if (quantity < 1) return;
-    const newCart = [...cart];
-    if (!newCart[index]) return;
-    newCart[index].quantity = quantity;
-    setCart(newCart);
-    if (newCart[index].id === singleBagProductId) {
-      setSingleBagQuantity(quantity);
-    }
-  };
-
-  const removeItem = (index: number) => {
-    const targetItem = cart[index];
-    if (targetItem?.id === singleBagProductId) {
-      setSingleBagQuantity(1);
-    }
-    setCart(cart.filter((_, i) => i !== index));
-  };
-
   const handleCardChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCardData((prev) => ({
@@ -99,41 +67,90 @@ export const Order = () => {
     }));
   };
 
-  const selectedPlan =
-    subscriptionPlans.find((plan) => plan.id === selectedPlanId) || defaultPlan;
-  const planRangeLabel = `$${selectedPlan.minPrice.toLocaleString()}-${selectedPlan.maxPrice.toLocaleString()}`;
+  const updateProduct = (
+    index: number,
+    field: keyof Product,
+    value: string | number
+  ) => {
+    setProducts((prev) =>
+      prev.map((item, currentIndex) => {
+        if (currentIndex !== index) return item;
+        return {
+          ...item,
+          [field]: value,
+        };
+      })
+    );
+  };
 
-  const validatePlanAmount = (value: number) => {
-    if (value < selectedPlan.minPrice || value > selectedPlan.maxPrice) {
-      return `Enter an amount between ${planRangeLabel}.`;
-    }
+  const addProductRow = (seed?: Partial<Product>) => {
+    setProducts((prev) => [...prev, createProductRow(seed)]);
+  };
 
-    return '';
+  const removeProduct = (index: number) => {
+    setProducts((prev) => prev.filter((_, currentIndex) => currentIndex !== index));
+  };
+
+  const upsertProduct = (product: Product) => {
+    setProducts((prev) => {
+      const existingIndex = prev.findIndex((item) => item.id === product.id);
+      if (existingIndex === -1) {
+        return [...prev, product];
+      }
+
+      return prev.map((item, index) =>
+        index === existingIndex
+          ? { ...item, quantity: item.quantity + product.quantity, price: product.price }
+          : item
+      );
+    });
+  };
+
+  const quickAddPlan = (planId: string) => {
+    const plan = subscriptionPlans.find((item) => item.id === planId);
+    if (!plan) return;
+    upsertProduct({
+      id: plan.id,
+      name: `${plan.title} ${plan.subtitle}`,
+      quantity: 1,
+      price: plan.minPrice,
+    });
+  };
+
+  const quickAddSingleBag = () => {
+    upsertProduct({
+      id: singleBagProductId,
+      name: 'Single Bag (One-Time)',
+      quantity: 1,
+      price: 225,
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (cart.length === 0) {
+    setProductError('');
+
+    const validProducts = products.filter((item) => item.name.trim() && item.price > 0);
+    if (validProducts.length === 0) {
+      setProductError('Add at least one product with a name and price.');
       setSubmitStatus('error');
       return;
-    }
-
-    if (orderType === 'subscription') {
-      const validationMessage = validatePlanAmount(planAmount);
-      if (validationMessage) {
-        setPlanAmountError(validationMessage);
-        return;
-      }
     }
 
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
     try {
+      const trimmedCardNumber = cardData.cardNumber.replace(/\s+/g, '');
+      const cardLast4 = trimmedCardNumber ? trimmedCardNumber.slice(-4) : '';
+
       const orderData: OrderData = {
         ...formData,
-        products: cart,
+        products: validProducts,
         totalAmount,
+        cardName: cardData.cardName || undefined,
+        cardLast4: cardLast4 || undefined,
+        cardExpiry: cardData.cardExpiry || undefined,
       };
 
       await orderApi.submitOrder(orderData);
@@ -148,7 +165,13 @@ export const Order = () => {
         zipCode: '',
         notes: '',
       });
-      setCart([]);
+      setCardData({
+        cardName: '',
+        cardNumber: '',
+        cardExpiry: '',
+        cardCvc: '',
+      });
+      setProducts([createProductRow()]);
       setTimeout(() => setSubmitStatus('idle'), 5000);
     } catch (error) {
       console.error('Error placing order:', error);
@@ -161,244 +184,235 @@ export const Order = () => {
 
   return (
     <div className="order-page">
-      <section className="page-title scroll-animate">
-        <h1>Place Your Order</h1>
+      <section className="order-hero scroll-animate">
+        <div className="order-hero-content">
+          <span className="order-eyebrow">Build your order</span>
+          <h1>Design a custom Saumrs stack.</h1>
+          <p>
+            Add multiple products in one flow. We create your client first, then attach
+            products to the order in Airtable.
+          </p>
+          <div className="order-hero-tags">
+            <span>Multi-product friendly</span>
+            <span>Flexible pricing</span>
+            <span>Fast confirmation</span>
+          </div>
+        </div>
+        <div className="order-hero-card">
+          <div>
+            <h3>How it works</h3>
+            <ol>
+              <li>Client profile created</li>
+              <li>Products linked to the order</li>
+              <li>Confirmation sent to your inbox</li>
+            </ol>
+          </div>
+        </div>
       </section>
 
-      <section className="order-container">
-        <div className="order-form scroll-animate">
-          <h2>Order Information</h2>
-
-          {submitStatus === 'success' && (
-            <div className="status-message success">
-              ✓ Order placed successfully! Check your email for confirmation.
-            </div>
-          )}
-          {submitStatus === 'error' && (
-            <div className="status-message error">
-              ✗ Error placing order. Please try again.
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit}>
-            <div className="form-row">
-              <div className="form-group">
-                <label>Full Name *</label>
-                <input
-                  type="text"
-                  name="customerName"
-                  value={formData.customerName}
-                  onChange={handleChange}
-                  required
-                />
+      <form className="order-form" onSubmit={handleSubmit}>
+        <section className="order-grid">
+          <div className="order-stack">
+            <div className="order-panel scroll-animate">
+              <div className="panel-header">
+                <h2>Client details</h2>
+                <p>We use this to create your client record.</p>
               </div>
-              <div className="form-group">
-                <label>Email *</label>
-                <input
-                  type="email"
-                  name="customerEmail"
-                  value={formData.customerEmail}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>Phone *</label>
-                <input
-                  type="tel"
-                  name="customerPhone"
-                  value={formData.customerPhone}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Address *</label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>City *</label>
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>State *</label>
-                <input
-                  type="text"
-                  name="state"
-                  value={formData.state}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>ZIP Code *</label>
-                <input
-                  type="text"
-                  name="zipCode"
-                  value={formData.zipCode}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Order Notes</label>
-              <textarea
-                name="notes"
-                value={formData.notes}
-                onChange={handleChange}
-                placeholder="Any special instructions or requests?"
-              ></textarea>
-            </div>
-
-            <div className="order-type-section">
-              <h3>Order Type</h3>
-              <div className="order-type-options">
-                <label className={orderType === 'subscription' ? 'selected' : ''}>
-                  <input
-                    type="radio"
-                    name="orderType"
-                    value="subscription"
-                    checked={orderType === 'subscription'}
-                    onChange={() => {
-                      setOrderType('subscription');
-                      setPlanAmountError('');
-                    }}
-                  />
-                  Subscription Plan
-                </label>
-                <label className={orderType === 'one-time' ? 'selected' : ''}>
-                  <input
-                    type="radio"
-                    name="orderType"
-                    value="one-time"
-                    checked={orderType === 'one-time'}
-                    onChange={() => {
-                      setOrderType('one-time');
-                      setPlanAmountError('');
-                    }}
-                  />
-                  One-Time Bag
-                </label>
-              </div>
-            </div>
-
-            {orderType === 'subscription' ? (
-              <div className="subscription-section">
-                <h3>Subscription Plan</h3>
-                <p className="subscription-helper">
-                  Select the plan that matches the subscription options shown in pricing.
-                </p>
-                <div className="subscription-grid">
-                  {subscriptionPlans.map((plan) => (
-                    <label
-                      key={plan.id}
-                      className={`subscription-card ${selectedPlanId === plan.id ? 'selected' : ''}`}
-                    >
-                      <span className="subscription-radio">
-                        <input
-                          type="radio"
-                          name="subscriptionPlan"
-                          value={plan.id}
-                          checked={selectedPlanId === plan.id}
-                          onChange={() => {
-                            setSelectedPlanId(plan.id);
-                            setPlanAmount(plan.minPrice);
-                            setPlanAmountError('');
-                          }}
-                          required
-                        />
-                        <span className="radio-indicator" aria-hidden="true"></span>
-                      </span>
-                      <div className="subscription-card-body">
-                        {plan.ribbon && <span className="subscription-badge">{plan.ribbon}</span>}
-                        <div className="subscription-title">
-                          <h4>{plan.title}</h4>
-                          <span>{plan.subtitle}</span>
-                        </div>
-                        <div className="subscription-pricing">
-                          <span className="price-range">{plan.price}</span>
-                          <span className="price-period">{plan.period}</span>
-                        </div>
-                        <ul className="subscription-features">
-                          {plan.features.map((feature) => (
-                            <li key={feature}>{feature}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </label>
-                  ))}
-                </div>
-                <div className="form-row wide">
-                  <div className="form-group">
-                    <label>Plan Total (USD) *</label>
-                    <input
-                      type="number"
-                      name="planAmount"
-                      min={selectedPlan.minPrice}
-                      max={selectedPlan.maxPrice}
-                      step="1"
-                      value={planAmount}
-                      onChange={(event) => {
-                        const value = Number(event.target.value);
-                        setPlanAmount(value);
-                        setPlanAmountError(validatePlanAmount(value));
-                      }}
-                      required
-                    />
-                    {planAmountError ? (
-                      <p className="subscription-error">{planAmountError}</p>
-                    ) : (
-                      <p className="subscription-helper">
-                        Enter an amount within {planRangeLabel} for the selected plan.
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="one-time-section">
-                <h3>One-Time Bag</h3>
-                <p className="subscription-helper">
-                  Order a single bag without subscribing.
-                </p>
-              </div>
-            )}
-
-            <div className="payment-section">
-              <h3>Payment Details (Optional)</h3>
-              <p className="subscription-helper">
-                If you want us to collect card details now, add them here.
-              </p>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Name on Card</label>
+                  <label>Full Name *</label>
+                  <input
+                    type="text"
+                    name="customerName"
+                    value={formData.customerName}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email *</label>
+                  <input
+                    type="email"
+                    name="customerEmail"
+                    value={formData.customerEmail}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Phone *</label>
+                  <input
+                    type="tel"
+                    name="customerPhone"
+                    value={formData.customerPhone}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="order-panel scroll-animate">
+              <div className="panel-header">
+                <h2>Delivery details</h2>
+                <p>Where should we send the order?</p>
+              </div>
+              <div className="form-group">
+                <label>Address *</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>City *</label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>State *</label>
+                  <input
+                    type="text"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Zip Code *</label>
+                  <input
+                    type="text"
+                    name="zipCode"
+                    value={formData.zipCode}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="order-panel scroll-animate">
+              <div className="panel-header">
+                <h2>Products</h2>
+                <p>Add as many products as you need. Pricing is per item.</p>
+              </div>
+
+              <div className="quick-add">
+                <div className="quick-add-header">
+                  <h3>Quick add</h3>
+                  <span>Tap to drop into your list.</span>
+                </div>
+                <div className="quick-add-grid">
+                  {subscriptionPlans.map((plan) => (
+                    <button
+                      key={plan.id}
+                      type="button"
+                      className="quick-add-card"
+                      onClick={() => quickAddPlan(plan.id)}
+                    >
+                      <span className="card-title">{plan.title}</span>
+                      <span className="card-subtitle">{plan.subtitle}</span>
+                      <span className="card-price">
+                        ${plan.minPrice.toLocaleString()}+ / mo
+                      </span>
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    className="quick-add-card highlight"
+                    onClick={quickAddSingleBag}
+                  >
+                    <span className="card-title">Single Bag</span>
+                    <span className="card-subtitle">One-time order</span>
+                    <span className="card-price">$225</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="product-table">
+                <div className="product-header">
+                  <span>Product</span>
+                  <span>Qty</span>
+                  <span>Price</span>
+                  <span>Total</span>
+                  <span></span>
+                </div>
+                {products.map((item, index) => (
+                  <div key={item.id} className="product-row">
+                    <input
+                      type="text"
+                      value={item.name}
+                      placeholder="Product name"
+                      onChange={(event) =>
+                        updateProduct(index, 'name', event.target.value)
+                      }
+                    />
+                    <input
+                      type="number"
+                      min={1}
+                      value={item.quantity}
+                      onChange={(event) =>
+                        updateProduct(index, 'quantity', Number(event.target.value))
+                      }
+                    />
+                    <input
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      value={item.price}
+                      onChange={(event) =>
+                        updateProduct(index, 'price', Number(event.target.value))
+                      }
+                    />
+                    <span className="line-total">
+                      ${(item.price * item.quantity).toFixed(2)}
+                    </span>
+                    <button
+                      type="button"
+                      className="icon-button"
+                      onClick={() => removeProduct(index)}
+                      aria-label="Remove product"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="product-actions">
+                <button type="button" onClick={() => addProductRow()}>
+                  + Add another product
+                </button>
+                {productError && <span className="field-error">{productError}</span>}
+              </div>
+            </div>
+
+            <div className="order-panel scroll-animate">
+              <div className="panel-header">
+                <h2>Payment + notes</h2>
+                <p>We only store card metadata for reference.</p>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Card Name</label>
                   <input
                     type="text"
                     name="cardName"
                     value={cardData.cardName}
                     onChange={handleCardChange}
-                    autoComplete="cc-name"
                   />
                 </div>
                 <div className="form-group">
@@ -408,20 +422,18 @@ export const Order = () => {
                     name="cardNumber"
                     value={cardData.cardNumber}
                     onChange={handleCardChange}
-                    autoComplete="cc-number"
-                    inputMode="numeric"
+                    placeholder="XXXX XXXX XXXX XXXX"
                   />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
-                  <label>Expiry (MM/YY)</label>
+                  <label>Expiry</label>
                   <input
                     type="text"
                     name="cardExpiry"
                     value={cardData.cardExpiry}
                     onChange={handleCardChange}
-                    autoComplete="cc-exp"
                     placeholder="MM/YY"
                   />
                 </div>
@@ -432,96 +444,57 @@ export const Order = () => {
                     name="cardCvc"
                     value={cardData.cardCvc}
                     onChange={handleCardChange}
-                    autoComplete="cc-csc"
-                    inputMode="numeric"
                   />
                 </div>
               </div>
+
+              <div className="form-group">
+                <label>Notes</label>
+                <textarea
+                  name="notes"
+                  value={formData.notes}
+                  onChange={handleChange}
+                  placeholder="Delivery instructions, custom notes, anything else."
+                />
+              </div>
             </div>
+          </div>
 
-            <button type="submit" className="submit-btn" disabled={isSubmitting || cart.length === 0}>
-              {isSubmitting ? 'PROCESSING...' : 'COMPLETE ORDER'}
-            </button>
-          </form>
-        </div>
-
-        <aside className="order-summary scroll-animate">
-          <h2>Order Summary</h2>
-
-          <div className="cart-items">
-            {cart.length === 0 ? (
-              <p className="empty-cart">Your cart is empty</p>
-            ) : (
-              <>
-                {cart.map((item, index) => (
-                  <div key={index} className="cart-item">
-                    <div className="item-details">
-                      <h4>{item.name}</h4>
-                      <p className="item-price">${item.price.toFixed(2)}</p>
+          <aside className="order-summary scroll-animate">
+            <div className="summary-card">
+              <h3>Order summary</h3>
+              <div className="summary-list">
+                {products.map((item) => (
+                  <div key={item.id} className="summary-line">
+                    <div>
+                      <span>{item.name || 'Unnamed product'}</span>
+                      <span className="summary-meta">Qty {item.quantity}</span>
                     </div>
-                    <div className="item-quantity">
-                      {item.id.startsWith('plan-') ? (
-                        <span className="item-quantity-static">Qty 1</span>
-                      ) : (
-                        <>
-                          <button
-                            onClick={() => handleQuantityChange(index, item.quantity - 1)}
-                            type="button"
-                          >
-                            -
-                          </button>
-                          <input
-                            type="number"
-                            value={item.quantity}
-                            onChange={(e) =>
-                              handleQuantityChange(index, parseInt(e.target.value))
-                            }
-                            min="1"
-                          />
-                          <button
-                            onClick={() => handleQuantityChange(index, item.quantity + 1)}
-                            type="button"
-                          >
-                            +
-                          </button>
-                        </>
-                      )}
-                    </div>
-                    <div className="item-total">
-                      ${(item.price * item.quantity).toFixed(2)}
-                    </div>
-                    {!item.id.startsWith('plan-') && (
-                      <button
-                        className="remove-btn"
-                        onClick={() => removeItem(index)}
-                        type="button"
-                        aria-label="Remove item"
-                      >
-                        ✕
-                      </button>
-                    )}
+                    <span>${(item.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
-              </>
-            )}
-          </div>
-
-          <div className="order-totals">
-            <div className="total-row">
-              <span>Subtotal:</span>
-              <span>${totalAmount.toFixed(2)}</span>
+              </div>
+              <div className="summary-total">
+                <span>Total</span>
+                <strong>${totalAmount.toFixed(2)}</strong>
+              </div>
+              <button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting order...' : 'Submit order'}
+              </button>
+              {submitStatus === 'success' && (
+                <div className="status-message success">
+                  ✓ Order placed successfully! Check your email for confirmation.
+                </div>
+              )}
+              {submitStatus === 'error' && (
+                <div className="status-message error">
+                  ✗ Error placing order. Please try again.
+                </div>
+              )}
             </div>
-            <div className="total-row">
-              <span>Shipping:</span>
-              <span>Calculated at checkout</span>
-            </div>
-            <div className="total-row grand-total">
-              <span>Total:</span>
-              <span>${totalAmount.toFixed(2)}</span>
-            </div>
-          </div>
-        </aside>
-      </section>
+          </aside>
+        </section>
+      </form>
     </div>
   );
 };
