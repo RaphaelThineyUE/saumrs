@@ -437,7 +437,8 @@ function mapOrderRecord(
 router.post("/", async (req: OrderRequest, res: Response) => {
   try {
     const fields = buildOrderFields(req.body) as OrderInput;
-    const progress: Array<{ label: string; status: "success" | "warning" }> = [];
+    const progress: Array<{ label: string; status: "success" | "warning" }> =
+      [];
     const warnings: string[] = [];
 
     // Validate required fields
@@ -499,11 +500,11 @@ router.post("/", async (req: OrderRequest, res: Response) => {
           [
             {
               fields: {
-                "Name": product.name,
-                "Quantity": product.quantity,
-                "Price": product.price,
-                "Description": `Product ID: ${product.id}`,
-                "Orders": [orderRecord.id],
+                Name: product.name,
+                Quantity: product.quantity,
+                Price: product.price,
+                Description: `Product ID: ${product.id}`,
+                Orders: [orderRecord.id],
               },
             } as Airtable.RecordData<AirtableProductFields>,
           ],
@@ -523,7 +524,7 @@ router.post("/", async (req: OrderRequest, res: Response) => {
     const productIds = productRecords.map((record) => record.id);
     const updatedOrderRecord = await base(ORDERS_TABLE).update(
       orderRecord.id,
-      { "Products": productIds } as AirtableOrderFields,
+      { Products: productIds } as AirtableOrderFields,
       { typecast: true },
     );
 
@@ -531,9 +532,7 @@ router.post("/", async (req: OrderRequest, res: Response) => {
       toAirtableRecord(
         updatedOrderRecord as Airtable.Record<AirtableOrderFields>,
       ),
-      toAirtableRecord(
-        clientRecord as Airtable.Record<AirtableClientFields>,
-      ),
+      toAirtableRecord(clientRecord as Airtable.Record<AirtableClientFields>),
       productRecords.map((record) =>
         toAirtableRecord(record as Airtable.Record<AirtableProductFields>),
       ),
@@ -705,18 +704,18 @@ router.get("/", async (_req: Request, res: Response) => {
           : [];
 
         const clientRecord = clientIds.length
-            ? toAirtableRecord(
-              (await base(CLIENTS_TABLE).find(clientIds[0])) as Airtable.Record<
-                AirtableClientFields
-              >,
+          ? toAirtableRecord(
+              (await base(CLIENTS_TABLE).find(
+                clientIds[0],
+              )) as Airtable.Record<AirtableClientFields>,
             )
           : undefined;
         const productRecords = await Promise.all(
           productIds.map(async (productId) =>
             toAirtableRecord(
-              (await base(PRODUCTS_TABLE).find(productId)) as Airtable.Record<
-                AirtableProductFields
-              >,
+              (await base(PRODUCTS_TABLE).find(
+                productId,
+              )) as Airtable.Record<AirtableProductFields>,
             ),
           ),
         );
@@ -759,9 +758,9 @@ router.get("/:id", async (req: Request, res: Response) => {
   try {
     const base = getAirtableBase();
     const record = toAirtableRecord(
-      (await base(ORDERS_TABLE).find(req.params.id)) as Airtable.Record<
-        AirtableOrderFields
-      >,
+      (await base(ORDERS_TABLE).find(
+        req.params.id,
+      )) as Airtable.Record<AirtableOrderFields>,
     );
     const fields = record.fields || {};
     const clientIds = Array.isArray(fields["Client"])
@@ -773,17 +772,17 @@ router.get("/:id", async (req: Request, res: Response) => {
 
     const clientRecord = clientIds.length
       ? toAirtableRecord(
-          (await base(CLIENTS_TABLE).find(clientIds[0])) as Airtable.Record<
-            AirtableClientFields
-          >,
+          (await base(CLIENTS_TABLE).find(
+            clientIds[0],
+          )) as Airtable.Record<AirtableClientFields>,
         )
       : undefined;
     const productRecords = await Promise.all(
       productIds.map(async (productId) =>
         toAirtableRecord(
-          (await base(PRODUCTS_TABLE).find(productId)) as Airtable.Record<
-            AirtableProductFields
-          >,
+          (await base(PRODUCTS_TABLE).find(
+            productId,
+          )) as Airtable.Record<AirtableProductFields>,
         ),
       ),
     );
@@ -805,9 +804,9 @@ router.patch("/:id", async (req: Request, res: Response) => {
 
     const base = getAirtableBase();
     const existingOrder = toAirtableRecord(
-      (await base(ORDERS_TABLE).find(req.params.id)) as Airtable.Record<
-        AirtableOrderFields
-      >,
+      (await base(ORDERS_TABLE).find(
+        req.params.id,
+      )) as Airtable.Record<AirtableOrderFields>,
     );
     const orderFields = existingOrder.fields || {};
     const clientIds = Array.isArray(orderFields["Client"])
@@ -837,19 +836,17 @@ router.patch("/:id", async (req: Request, res: Response) => {
               [
                 {
                   fields: {
-                    "Name": product.name,
-                    "Quantity": product.quantity,
-                    "Price": product.price,
-                    "Description": `Product ID: ${product.id}`,
-                    "Orders": [req.params.id],
+                    Name: product.name,
+                    Quantity: product.quantity,
+                    Price: product.price,
+                    Description: `Product ID: ${product.id}`,
+                    Orders: [req.params.id],
                   },
                 } as Airtable.RecordData<AirtableProductFields>,
               ],
               { typecast: true },
             )
-            .then((created) =>
-              Array.isArray(created) ? created[0] : created,
-            )
+            .then((created) => (Array.isArray(created) ? created[0] : created))
             .then((record) =>
               toAirtableRecord(
                 record as Airtable.Record<AirtableProductFields>,
@@ -870,9 +867,9 @@ router.patch("/:id", async (req: Request, res: Response) => {
 
     const clientRecord = clientId
       ? toAirtableRecord(
-          (await base(CLIENTS_TABLE).find(clientId)) as Airtable.Record<
-            AirtableClientFields
-          >,
+          (await base(CLIENTS_TABLE).find(
+            clientId,
+          )) as Airtable.Record<AirtableClientFields>,
         )
       : undefined;
     const productsToMap = productRecords.length
@@ -881,9 +878,9 @@ router.patch("/:id", async (req: Request, res: Response) => {
         ? await Promise.all(
             (record.fields["Products"] as string[]).map(async (productId) =>
               toAirtableRecord(
-                (await base(PRODUCTS_TABLE).find(productId)) as Airtable.Record<
-                  AirtableProductFields
-                >,
+                (await base(PRODUCTS_TABLE).find(
+                  productId,
+                )) as Airtable.Record<AirtableProductFields>,
               ),
             ),
           )
