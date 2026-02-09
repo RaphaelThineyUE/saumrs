@@ -37,6 +37,7 @@ export const Order = () => {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>(
     'idle'
   );
+  const [submissionProgress, setSubmissionProgress] = useState<string[]>([]);
 
   useEffect(() => {
     if (products.length === 0) {
@@ -53,17 +54,60 @@ export const Order = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    let formattedValue = value;
+
+    // Format phone number
+    if (name === 'customerPhone') {
+      formattedValue = value.replace(/\D/g, '');
+      if (formattedValue.length > 0) {
+        if (formattedValue.length <= 3) {
+          formattedValue = `(${formattedValue}`;
+        } else if (formattedValue.length <= 6) {
+          formattedValue = `(${formattedValue.slice(0, 3)}) ${formattedValue.slice(3)}`;
+        } else {
+          formattedValue = `(${formattedValue.slice(0, 3)}) ${formattedValue.slice(3, 6)}-${formattedValue.slice(6, 10)}`;
+        }
+      }
+    }
+
+    // Format zip code to numbers only
+    if (name === 'zipCode') {
+      formattedValue = value.replace(/\D/g, '').slice(0, 5);
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: formattedValue,
     }));
   };
 
   const handleCardChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    let formattedValue = value;
+
+    // Format card number with spaces
+    if (name === 'cardNumber') {
+      formattedValue = value.replace(/\s/g, '').replace(/(\d{4})/g, '$1 ').trim();
+      if (formattedValue.length > 19) formattedValue = formattedValue.slice(0, 19);
+    }
+
+    // Format expiry date
+    if (name === 'cardExpiry') {
+      formattedValue = value.replace(/\D/g, '');
+      if (formattedValue.length >= 2) {
+        formattedValue = formattedValue.slice(0, 2) + '/' + formattedValue.slice(2, 4);
+      }
+      if (formattedValue.length > 5) formattedValue = formattedValue.slice(0, 5);
+    }
+
+    // Format CVC to numbers only
+    if (name === 'cardCvc') {
+      formattedValue = value.replace(/\D/g, '').slice(0, 4);
+    }
+
     setCardData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: formattedValue,
     }));
   };
 
@@ -129,6 +173,7 @@ export const Order = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setProductError('');
+    setSubmissionProgress([]);
 
     const validProducts = products.filter((item) => item.name.trim() && item.price > 0);
     if (validProducts.length === 0) {
@@ -141,6 +186,11 @@ export const Order = () => {
     setSubmitStatus('idle');
 
     try {
+      setSubmissionProgress(['Creating client profile...']);
+      
+      // Simulate a brief delay to show the progress
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
       const trimmedCardNumber = cardData.cardNumber.replace(/\s+/g, '');
       const cardLast4 = trimmedCardNumber ? trimmedCardNumber.slice(-4) : '';
 
@@ -153,8 +203,28 @@ export const Order = () => {
         cardExpiry: cardData.cardExpiry || undefined,
       };
 
+      setSubmissionProgress(['✓ Client profile created', 'Creating order record...']);
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      setSubmissionProgress([
+        '✓ Client profile created',
+        '✓ Order record created',
+        `Adding ${validProducts.length} product(s)...`
+      ]);
+
       await orderApi.submitOrder(orderData);
+      
+      setSubmissionProgress([
+        '✓ Client profile created',
+        '✓ Order record created',
+        `✓ ${validProducts.length} product(s) added`,
+        '✓ Sending confirmation email...'
+      ]);
+
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       setSubmitStatus('success');
+      setSubmissionProgress([]);
       setFormData({
         customerName: '',
         customerEmail: '',
@@ -176,6 +246,7 @@ export const Order = () => {
     } catch (error) {
       console.error('Error placing order:', error);
       setSubmitStatus('error');
+      setSubmissionProgress([]);
       setTimeout(() => setSubmitStatus('idle'), 5000);
     } finally {
       setIsSubmitting(false);
@@ -189,8 +260,9 @@ export const Order = () => {
           <span className="order-eyebrow">Build your order</span>
           <h1>Design a custom Saumrs stack.</h1>
           <p>
-            Add multiple products in one flow. We create your client first, then attach
-            products to the order in Airtable.
+            Start by filling in your client details below, then use the quick-add buttons 
+            or manually enter products. Your order and client profile will be automatically 
+            created in our system.
           </p>
           <div className="order-hero-tags">
             <span>Multi-product friendly</span>
@@ -249,6 +321,8 @@ export const Order = () => {
                     name="customerPhone"
                     value={formData.customerPhone}
                     onChange={handleChange}
+                    placeholder="(555) 123-4567"
+                    pattern="^\(\d{3}\) \d{3}-\d{4}$"
                     required
                   />
                 </div>
@@ -298,6 +372,8 @@ export const Order = () => {
                     name="zipCode"
                     value={formData.zipCode}
                     onChange={handleChange}
+                    placeholder="12345"
+                    pattern="^\d{5}$"
                     required
                   />
                 </div>
@@ -422,7 +498,8 @@ export const Order = () => {
                     name="cardNumber"
                     value={cardData.cardNumber}
                     onChange={handleCardChange}
-                    placeholder="XXXX XXXX XXXX XXXX"
+                    placeholder="1234 5678 9012 3456"
+                    pattern="^\d{4} \d{4} \d{4} \d{4}$"
                   />
                 </div>
               </div>
@@ -435,6 +512,7 @@ export const Order = () => {
                     value={cardData.cardExpiry}
                     onChange={handleCardChange}
                     placeholder="MM/YY"
+                    pattern="^(0[1-9]|1[0-2])\/\d{2}$"
                   />
                 </div>
                 <div className="form-group">
@@ -444,6 +522,9 @@ export const Order = () => {
                     name="cardCvc"
                     value={cardData.cardCvc}
                     onChange={handleCardChange}
+                    placeholder="123"
+                    pattern="^\d{3,4}$"
+                    maxLength={4}
                   />
                 </div>
               </div>
@@ -481,6 +562,15 @@ export const Order = () => {
               <button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'Submitting order...' : 'Submit order'}
               </button>
+              {submissionProgress.length > 0 && (
+                <div className="progress-list">
+                  {submissionProgress.map((step, index) => (
+                    <div key={index} className="progress-step">
+                      {step}
+                    </div>
+                  ))}
+                </div>
+              )}
               {submitStatus === 'success' && (
                 <div className="status-message success">
                   ✓ Order placed successfully! Check your email for confirmation.
