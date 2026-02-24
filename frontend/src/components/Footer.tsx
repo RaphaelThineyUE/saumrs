@@ -62,7 +62,7 @@ export const Footer = () => {
           <a href="#privacy">Privacy</a> •{' '}
           <a href="#terms">Terms of use</a>
         </div>
-        <p>© 2024 SAUMRS ™</p>
+        <p>© 2023 SAUMRS ™</p>
       </div>
     </>
   );
