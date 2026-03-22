@@ -17,7 +17,8 @@
     "backend:build": "cd backend && npm r run build",
     "setup": "bash setup.sh",
     "visual:compare": "node scripts/visual-compare.cjs",
-    "visual:ingredients": "node scripts/compare-ingredients.cjs"
+    "visual:ingredients": "node scripts/compare-ingredients.cjs",
+    "installall": "cd backend && npm install && cd ../frontend && npm install"
   },
   "keywords": [
     "saumrs",
