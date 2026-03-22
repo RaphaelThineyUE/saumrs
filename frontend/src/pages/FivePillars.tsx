@@ -1,6 +1,4 @@
 import { useEffect } from 'react';
-import { Header } from '../components/Header';
-import { Footer } from '../components/Footer';
 import { LogosCarousel } from '../components/LogosCarousel';
 import { YouTubeVideo } from '../components/YouTubeVideo';
 import { FitnessIcon, NutritionIcon, SleepIcon, StressIcon, SocialIcon } from '../components/PillarIcons';
@@ -29,9 +27,7 @@ export const FivePillars = () => {
 
   return (
     <div className="five-pillars-page">
-      <Header />
-      
-      <main className="five-pillars-content">
+      <div className="five-pillars-content">
         {/* Hero Section with Video */}
         <section className="hero-section">
           <div className="container hero-container">
@@ -274,9 +270,7 @@ export const FivePillars = () => {
             </div>
           </div>
         </section>
-      </main>
-
-      <Footer />
+      </div>
     </div>
   );
 };
